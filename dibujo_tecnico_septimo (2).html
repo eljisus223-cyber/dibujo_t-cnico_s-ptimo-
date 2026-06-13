@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dibujo Técnico · Grado 7°</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f3;
+    --bg3: #1a3a5c;
+    --text: #1a1a18;
+    --text2: #5f5e5a;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.22);
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --blue-dark: #0C447C;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg3);
+    color: var(--text);
+  }
+
+  /* Layout principal adaptable */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: 70px 1fr;
+    width: 100%;
+    height: 100vh;
+    gap: 0;
+  }
+
+  /* Cabecera */
+  .header {
+    grid-column: 1 / 3;
+    background: var(--blue-dark);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1.5rem;
+    border-bottom: 3px solid var(--blue);
+  }
+  .hero-icon {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .hero-icon i { font-size: 20px; color: #fff; }
+  .hero-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: #fff; line-height: 1.1; }
+  .hero-sub { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+
+  /* Sidebar de navegación */
+  .sidebar {
+    background: var(--bg2);
+    border-right: 0.5px solid var(--border);
+    padding: 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+  }
+  .sidebar-label {
+    font-size: 9px; font-weight: 500; color: var(--text2);
+    text-transform: uppercase; letter-spacing: .08em;
+    padding: 0 8px; margin-bottom: 3px; margin-top: 8px;
+  }
+  .sidebar-label:first-child { margin-top: 0; }
+  .tab {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: 8px;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; border: none;
+    background: transparent; color: var(--text2);
+    transition: all .2s; text-align: left; width: 100%;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .tab i { font-size: 14px; flex-shrink: 0; }
+  .tab:hover { background: var(--bg); color: var(--text); }
+  .tab.active { background: var(--blue); color: #fff; }
+
+  /* Área de contenido */
+  .content {
+    padding: 1.25rem 1.5rem;
+    overflow-y: auto;
+    height: calc(100vh - 70px);
+    background: var(--bg);
+  }
+
+  /* Intro */
+  .intro-block {
+    margin-bottom: 1.5rem;
+    padding: 1.1rem 1.4rem;
+    background: var(--bg2);
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--blue);
+  }
+  .intro-block p { font-size: 13px; color: var(--text2); line-height: 1.8; margin-bottom: .5rem; }
+  .intro-block p:last-child { margin-bottom: 0; }
+  .intro-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--blue-light); color: var(--blue-dark);
+    font-size: 11px; font-weight: 500; padding: 3px 12px;
+    border-radius: 20px; margin-bottom: .65rem;
+  }
+
+  /* Secciones */
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px; color: var(--text);
+    margin-bottom: 1rem;
+    padding-bottom: .6rem;
+    border-bottom: 0.5px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title i { color: var(--blue); font-size: 18px; }
+
+  .container {
+    max-width: 100%;
+    background: transparent;
+  }
+
+  .inst-badge {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+
+  .tabs { display: none; } /* Ocultas — navegación ahora en sidebar */
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Instrumentos */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  .card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color .2s, transform .15s;
+  }
+
+  .card:hover { border-color: var(--border2); transform: translateY(-1px); }
+  .card.selected { border: 2px solid var(--blue); }
+
+  .card i { font-size: 26px; color: var(--blue); display: block; margin-bottom: 8px; }
+  .card-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .card-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  .detail-box {
+    background: var(--bg2);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    min-height: 80px;
+  }
+
+  .detail-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .detail-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+  /* Panel escuadras */
+  .esq-panel { margin-top: 1rem; }
+  .esq-tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
+  .esq-tab {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    cursor: pointer; border: 0.5px solid var(--border); background: var(--bg);
+    color: var(--text2); transition: all .2s; font-family: 'DM Sans', sans-serif;
+  }
+  .esq-tab:hover { border-color: var(--border2); color: var(--text); }
+  .esq-tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .esq-content { display: none; }
+  .esq-content.active { display: block; }
+  .esq-step-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: .75rem; }
+  .esq-step {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 9px 12px; background: var(--bg); border: 0.5px solid var(--border);
+    border-radius: var(--radius-md); font-size: 13px; color: var(--text2); line-height: 1.6;
+  }
+  .esq-step-num {
+    min-width: 22px; height: 22px; border-radius: 50%; background: var(--blue-light);
+    color: var(--blue-dark); font-size: 11px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .angle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 10px; margin-bottom: .5rem; }
+  .angle-card {
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-md);
+    padding: 10px 12px; cursor: pointer; transition: border-color .2s;
+  }
+  .angle-card:hover { border-color: var(--border2); }
+  .angle-card.active-ang { border: 2px solid var(--blue); background: var(--bg2); }
+  .angle-deg { font-size: 20px; font-weight: 500; color: var(--blue); }
+  .angle-how { font-size: 11px; color: var(--text2); margin-top: 3px; line-height: 1.4; }
+  .esq-svg-wrap {
+    width: 100%; background: var(--bg); border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg); margin-top: .75rem; overflow: hidden;
+  }
+
+  /* Líneas */
+  .line-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+
+  .line-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+
+  .line-item:hover { border-color: var(--border2); }
+  .line-item.selected { border: 2px solid var(--blue); background: var(--bg2); }
+
+  .line-preview { width: 80px; flex-shrink: 0; }
+  .line-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .line-use { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  .lines-canvas {
+    width: 100%;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+    margin-bottom: 1rem;
+  }
+
+  /* Normas */
+  .norma-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 1rem; }
+
+  .norma-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .norma-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .norma-badge {
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .norma-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .norma-body { padding: 12px 14px; font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+  /* Quiz */
+  .progress { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--bg2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill { height: 100%; background: var(--blue); border-radius: 3px; transition: width .4s; }
+  .progress-label { font-size: 12px; color: var(--text2); white-space: nowrap; }
+
+  .quiz-q { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 1rem; }
+
+  .quiz-opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+
+  .quiz-opt {
+    padding: 10px 14px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--text);
+    text-align: left;
+    transition: all .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .quiz-opt:hover { border-color: var(--border2); }
+  .quiz-opt.correct { background: #EAF3DE; border-color: #639922; color: #3B6D11; }
+  .quiz-opt.wrong { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+
+  .quiz-feedback {
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    display: none;
+  }
+
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #EAF3DE; color: #3B6D11; }
+  .quiz-feedback.fail { background: #FCEBEB; color: #A32D2D; }
+
+  .btn {
+    padding: 9px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0.5px solid var(--border2);
+    background: var(--bg);
+    color: var(--text);
+    transition: all .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn:hover { background: var(--bg2); }
+  .btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .btn-primary:hover { background: var(--blue-dark); }
+
+  .footer {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 12px;
+    color: var(--text2);
+    text-align: center;
+  }
+
+  /* Videos */
+  .intro-block {
+    margin-bottom: 1.75rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg2);
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--blue);
+  }
+  .intro-block p { font-size: 13px; color: var(--text2); line-height: 1.8; margin-bottom: .6rem; }
+  .intro-block p:last-child { margin-bottom: 0; }
+  .intro-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--blue-light); color: var(--blue-dark);
+    font-size: 11px; font-weight: 500; padding: 4px 12px;
+    border-radius: 20px; margin-bottom: .75rem;
+  }
+
+  /* Formatos */
+  .fmt-table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+  .fmt-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .fmt-table th { background: var(--blue); color: #fff; padding: 8px 12px; text-align: left; font-weight: 500; }
+  .fmt-table th:first-child { border-radius: 8px 0 0 0; }
+  .fmt-table th:last-child { border-radius: 0 8px 0 0; }
+  .fmt-table td { padding: 9px 12px; border-bottom: 0.5px solid var(--border); color: var(--text2); }
+  .fmt-table tr:last-child td { border-bottom: none; }
+  .fmt-table tr:nth-child(even) td { background: var(--bg2); }
+  .fmt-highlight { font-weight: 500; color: var(--blue-dark); }
+  .fmt-note { font-size: 12px; color: var(--text2); margin-top: .5rem; line-height: 1.6; }
+  .fmt-diagram { margin: 1rem 0; }
+
+  /* Cuidado en planos */
+  .cuidado-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 10px; margin-bottom: 1rem; }
+  .cuidado-card {
+    background: var(--bg); border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1rem; display: flex; flex-direction: column; gap: 6px;
+  }
+  .cuidado-icon { font-size: 22px; }
+  .cuidado-title { font-size: 13px; font-weight: 500; color: var(--text); }
+  .cuidado-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
+  .cuidado-warn {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: #FAEEDA; border-radius: var(--radius-md); padding: 10px 14px;
+    font-size: 12px; color: #633806; line-height: 1.6; margin-top: .5rem;
+  }
+
+  /* Lápiz panel */
+  .lapiz-scale { display: flex; align-items: center; gap: 0; margin: 1rem 0; overflow-x: auto; padding-bottom: 4px; }
+  .lapiz-item {
+    display: flex; flex-direction: column; align-items: center;
+    min-width: 52px; cursor: pointer; padding: 6px 4px;
+    border-radius: var(--radius-md); transition: background .2s;
+  }
+  .lapiz-item:hover { background: var(--bg2); }
+  .lapiz-item.active-lap { background: var(--blue-light); }
+  .lapiz-circle {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; margin-bottom: 4px; border: 1.5px solid transparent;
+  }
+  .lapiz-label { font-size: 10px; color: var(--text2); text-align: center; }
+  .lapiz-arrow { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text2); margin-bottom: .5rem; }
+  .lapiz-detail { background: var(--bg2); border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; color: var(--text2); line-height: 1.7; min-height: 56px; }
+
+  /* Videos */
+  .video-section { margin-top: 1.25rem; border-top: 0.5px solid var(--border); padding-top: 1.25rem; }
+  .video-section-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: .75rem; display: flex; align-items: center; gap: 6px; }
+  .video-cards { display: flex; flex-direction: column; gap: 8px; }
+  .video-btn {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; background: var(--bg); border: 0.5px solid var(--border);
+    border-radius: var(--radius-md); cursor: pointer; text-decoration: none;
+    transition: border-color .2s, background .2s;
+  }
+  .video-btn:hover { border-color: #E24B4A; background: var(--bg2); }
+  .video-thumb {
+    width: 36px; height: 36px; border-radius: 6px;
+    background: #E24B4A; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .video-thumb i { font-size: 18px; color: #fff; }
+  .video-info { flex: 1; min-width: 0; }
+  .video-title { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .video-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .video-ext { font-size: 11px; color: #E24B4A; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- CABECERA -->
+  <div class="header">
+    <div class="hero-icon"><i class="ti ti-pencil-ruler"></i></div>
+    <div>
+      <div class="hero-title">Dibujo Técnico</div>
+      <div class="hero-sub">Introducción general · Grado 7° · Tecnología e Informática · I.E. Colegio de Sugamuxi</div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-label">Contenido</div>
+    <button class="tab active" onclick="showTab('intro')"><i class="ti ti-info-circle"></i> Introducción</button>
+    <button class="tab" onclick="showTab('instrumentos')"><i class="ti ti-tool"></i> Instrumentos</button>
+    <button class="tab" onclick="showTab('lineas')"><i class="ti ti-minus"></i> Tipos de líneas</button>
+    <button class="tab" onclick="showTab('formatos')"><i class="ti ti-file"></i> Formatos de papel</button>
+    <button class="tab" onclick="showTab('normas')"><i class="ti ti-list-check"></i> Normas básicas</button>
+    <button class="tab" onclick="showTab('cuidado')"><i class="ti ti-shield-check"></i> Cuidado en planos</button>
+    <div class="sidebar-label">Evaluación</div>
+    <button class="tab" onclick="showTab('quiz')"><i class="ti ti-brain"></i> Practiquemos</button>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="content">
+
+    <!-- INTRODUCCIÓN -->
+    <div id="sec-intro" class="section active">
+      <div class="section-title"><i class="ti ti-info-circle"></i> ¿Qué es el dibujo técnico?</div>
+      <div class="intro-block">
+        <div class="intro-pill"><i class="ti ti-info-circle" style="font-size:13px;"></i> Definición</div>
+        <p>El dibujo técnico es un lenguaje gráfico universal que permite representar objetos, estructuras y sistemas de forma precisa, clara y normalizada. A diferencia del dibujo artístico, el dibujo técnico sigue reglas y normas estrictas para que cualquier persona, en cualquier parte del mundo, pueda interpretar correctamente lo que se representa.</p>
+        <p>Se utiliza en campos como la ingeniería, la arquitectura, el diseño industrial y la tecnología. Desde el plano de una casa hasta el diseño de una pieza mecánica, todo parte de un buen dibujo técnico.</p>
+        <p>En este recurso aprenderás los instrumentos necesarios, los tipos de líneas, los formatos de papel, las normas básicas y los cuidados que debes tener al trabajar con planos.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1rem;">
+        <div class="card" style="cursor:default;">
+          <i class="ti ti-pencil-ruler" style="font-size:24px;color:var(--blue);display:block;margin-bottom:8px;"></i>
+          <div class="card-name">Precisión</div>
+          <div class="card-desc">El dibujo técnico exige exactitud en cada trazo, medida y símbolo usado.</div>
+        </div>
+        <div class="card" style="cursor:default;">
+          <i class="ti ti-world" style="font-size:24px;color:var(--blue);display:block;margin-bottom:8px;"></i>
+          <div class="card-name">Lenguaje universal</div>
+          <div class="card-desc">Las normas internacionales permiten que un plano sea interpretado en cualquier país.</div>
+        </div>
+        <div class="card" style="cursor:default;">
+          <i class="ti ti-building" style="font-size:24px;color:var(--blue);display:block;margin-bottom:8px;"></i>
+          <div class="card-name">Múltiples aplicaciones</div>
+          <div class="card-desc">Arquitectura, ingeniería, diseño industrial, tecnología y muchas áreas más.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSTRUMENTOS -->
+    <div id="sec-instrumentos" class="section">
+      <div class="section-title"><i class="ti ti-tool"></i> Instrumentos de dibujo técnico</div>
+      <div class="card-grid" id="inst-grid"></div>
+      <div class="detail-box" id="inst-detail">
+        <div class="detail-title">Selecciona un instrumento</div>
+        <div class="detail-text">Haz clic en cualquier instrumento para conocer más sobre su uso en el dibujo técnico.</div>
+      </div>
+      <div class="video-section">
+        <div class="video-section-title"><i class="ti ti-brand-youtube" style="color:#E24B4A;font-size:16px;"></i> Videos de apoyo — Instrumentos</div>
+        <div class="video-cards">
+          <a class="video-btn" href="https://www.youtube.com/watch?v=-ipvZXu_cfA" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Clase #1 — Instrumentos de dibujo técnico básico</div><div class="video-meta">Introducción completa a los instrumentos</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=ZyLg_4OUpyU" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Cómo aprender dibujo técnico #1 — Instrumentos</div><div class="video-meta">Hojas, lápices, escuadras y materiales esenciales</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LÍNEAS -->
+    <div id="sec-lineas" class="section">
+      <div class="section-title"><i class="ti ti-minus"></i> Tipos de líneas</div>
+      <div class="line-list" id="line-list"></div>
+      <div class="detail-box" id="line-detail">
+        <div class="detail-title">Selecciona un tipo de línea</div>
+        <div class="detail-text">Haz clic en una línea para ver sus características y usos.</div>
+      </div>
+      <svg class="lines-canvas" height="180" id="lines-svg" viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="video-section">
+        <div class="video-section-title"><i class="ti ti-brand-youtube" style="color:#E24B4A;font-size:16px;"></i> Videos de apoyo — Tipos de líneas</div>
+        <div class="video-cards">
+          <a class="video-btn" href="https://www.youtube.com/watch?v=fotog6dS9yI" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Dibujo técnico — Tipos de líneas</div><div class="video-meta">Aplicaciones según normas IRAM e ISO</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=7ualh506i98" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Tipos de líneas en dibujo técnico (parte 1)</div><div class="video-meta">Explicación detallada con ejercicios</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMATOS -->
+    <div id="sec-formatos" class="section">
+      <div class="section-title"><i class="ti ti-file"></i> Formatos de papel</div>
+      <div class="detail-box" style="margin-bottom:1.25rem;">
+        <div class="detail-title">¿Qué son los formatos?</div>
+        <div class="detail-text">Los formatos son los tamaños normalizados de papel en los que se realizan los dibujos técnicos. En Colombia se sigue la norma ISO 216, que establece la familia de formatos A. Cada formato es exactamente la mitad del anterior al doblarlo por su lado más largo.</div>
+      </div>
+      <div class="fmt-table-wrap">
+        <table class="fmt-table">
+          <thead><tr><th>Formato</th><th>Dimensiones (mm)</th><th>Uso principal</th></tr></thead>
+          <tbody id="fmt-tbody"></tbody>
+        </table>
+      </div>
+      <p class="fmt-note"><i class="ti ti-info-circle" style="font-size:13px;margin-right:4px;color:var(--blue);"></i>En grado séptimo trabajaremos principalmente con <strong>A4</strong>.</p>
+      <div class="fmt-diagram"><svg width="100%" viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" id="fmt-svg"></svg></div>
+      <div class="detail-box" style="margin-top:.5rem;">
+        <div class="detail-title">Partes del formato</div>
+        <div class="detail-text">
+          <strong>1. Recuadro exterior</strong> — margen de 20 mm en el lado izquierdo y 10 mm en los demás.<br>
+          <strong>2. Recuadro interior</strong> — delimita el área de dibujo.<br>
+          <strong>3. Cuadro de rotulación</strong> — esquina inferior derecha; contiene título, escala, autor, fecha e institución.
+        </div>
+      </div>
+      <div class="video-section">
+        <div class="video-section-title"><i class="ti ti-brand-youtube" style="color:#E24B4A;font-size:16px;"></i> Videos de apoyo — Formatos</div>
+        <div class="video-cards">
+          <a class="video-btn" href="https://www.youtube.com/watch?v=3e6PJ3Rz3Gs" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Formatos de papel en el dibujo técnico</div><div class="video-meta">Características y uso de los formatos A0 a A5</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=WZRdSYR3rs8" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Conceptos generales de planos — Formatos y rótulo</div><div class="video-meta">Formatos, escala, rotulación y doblado</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- NORMAS -->
+    <div id="sec-normas" class="section">
+      <div class="section-title"><i class="ti ti-list-check"></i> Normas básicas</div>
+      <div class="norma-list" id="norma-list"></div>
+      <div class="video-section">
+        <div class="video-section-title"><i class="ti ti-brand-youtube" style="color:#E24B4A;font-size:16px;"></i> Videos de apoyo — Normas</div>
+        <div class="video-cards">
+          <a class="video-btn" href="https://www.youtube.com/watch?v=F53W1dAOkcM" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Clase #3 — Trazado con escuadras</div><div class="video-meta">Técnicas de trazado y aplicación de normas</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=3BivS_INPI8" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Manejo de escuadras y ángulos</div><div class="video-meta">Ángulos, términos y ubicación de instrumentos</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUIDADO -->
+    <div id="sec-cuidado" class="section">
+      <div class="section-title"><i class="ti ti-shield-check"></i> Cuidado al realizar planos</div>
+      <div class="detail-box" style="margin-bottom:1.25rem;">
+        <div class="detail-title">¿Por qué es importante?</div>
+        <div class="detail-text">Un plano técnico bien elaborado requiere no solo destreza, sino también buenos hábitos de trabajo. Estos cuidados garantizan que el resultado sea preciso, limpio y duradero.</div>
+      </div>
+      <div class="cuidado-grid" id="cuidado-grid"></div>
+      <div class="cuidado-warn">
+        <i class="ti ti-alert-triangle" style="font-size:18px;flex-shrink:0;margin-top:1px;"></i>
+        <span>Nunca trabajes con las manos sucias o húmedas sobre el papel. El sudor y la grasa de los dedos manchan el papel y dificultan el borrado. Si es posible, usa guantes de algodón delgados o apoya la mano sobre una hoja limpia auxiliar.</span>
+      </div>
+      <div class="video-section">
+        <div class="video-section-title"><i class="ti ti-brand-youtube" style="color:#E24B4A;font-size:16px;"></i> Videos de apoyo — Buenas prácticas</div>
+        <div class="video-cards">
+          <a class="video-btn" href="https://www.youtube.com/watch?v=B7xChPc0PQE" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Uso del compás y escuadras — Buenas prácticas</div><div class="video-meta">Técnica correcta y cuidado de instrumentos</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="sec-quiz" class="section">
+      <div class="section-title"><i class="ti ti-brain"></i> Practiquemos</div>
+      <div class="progress">
+        <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+        <span class="progress-label" id="prog-label">0 / 5</span>
+      </div>
+      <div id="quiz-area"></div>
+    </div>
+
+  </div><!-- fin .content -->
+</div><!-- fin .layout -->
+
+<script>
+const instrumentos = [
+  {icon:'ti-pencil',name:'Lápiz técnico',desc:'Traza líneas finas y precisas. Se usan tipos H (duro) y HB (blando) según el trazo deseado. Siempre debe mantenerse bien afilado para lograr líneas uniformes.',special:'lapiz'},
+  {icon:'ti-ruler',name:'Regla T',desc:'Permite trazar líneas horizontales perfectas. Se apoya en el borde del tablero para guiar el trazado y garantizar paralelismo entre líneas.'},
+  {icon:'ti-triangle',name:'Escuadras',desc:'Se usan en pares (45° y 60°/30°) para trazar líneas verticales, horizontales y ángulos específicos. En combinación permiten trazar cualquier ángulo múltiplo de 15°.',special:'escuadras'},
+  {icon:'ti-circle',name:'Compás',desc:'Dibuja circunferencias y arcos de medidas exactas. Se regula la abertura según el radio necesario. Debe sostenerse verticalmente para obtener trazos precisos.'},
+  {icon:'ti-line-dashed',name:'Escalímetro',desc:'Regla especial con varias escalas (1:10, 1:20, 1:50…) para reducir o ampliar medidas reales en el papel. Es fundamental para planos y proyectos técnicos.'},
+  {icon:'ti-eraser',name:'Borrador técnico',desc:'Elimina trazos sin dañar el papel ni dejar manchas. Existen borradores específicos para lápiz y para tinta. Se usan con una plantilla de borrar para limpiar zonas pequeñas.'},
+];
+
+const lapices = [
+  {cod:'9H',tipo:'Muy duro',color:'#B4B2A9',uso:'Líneas muy finas y tenues. Apenas visible. Se usa para trazos auxiliares y construcciones que luego se borrarán.'},
+  {cod:'6H',tipo:'Duro',color:'#888780',uso:'Líneas finas de construcción. Muy poco pigmento. Ideal para bocetos previos de alta precisión.'},
+  {cod:'4H',tipo:'Duro',color:'#5F5E5A',uso:'Líneas auxiliares y de acotación. Trazo fino y claro. Frecuente en dibujo técnico de ingeniería.'},
+  {cod:'2H',tipo:'Duro',color:'#444441',uso:'Líneas visibles finas y contornos secundarios. Muy usado en dibujo técnico escolar.'},
+  {cod:'H',tipo:'Duro suave',color:'#2C2C2A',uso:'Líneas de contorno visibles. Buen equilibrio entre dureza y pigmento. Recomendado para trazos principales.'},
+  {cod:'HB',tipo:'Intermedio',color:'#185FA5',uso:'El más común. Sirve para contornos principales, rotulado y uso general. Es el punto de equilibrio de la escala.'},
+  {cod:'B',tipo:'Blando',color:'#0C447C',uso:'Líneas más gruesas y oscuras. Para remarcar contornos y títulos en el rotulado.'},
+  {cod:'2B',tipo:'Más blando',color:'#042C53',uso:'Trazos muy gruesos y oscuros. Poco usual en dibujo técnico puro; se usa para énfasis o croquis artísticos.'},
+];
+
+const formatos = [
+  {fmt:'A0',dims:'841 × 1189',area:'1 m²',uso:'Planos de arquitectura e ingeniería de gran tamaño'},
+  {fmt:'A1',dims:'594 × 841',area:'½ A0',uso:'Planos técnicos detallados'},
+  {fmt:'A2',dims:'420 × 594',area:'¼ A0',uso:'Planos de mediana escala, diseño industrial'},
+  {fmt:'A3',dims:'297 × 420',area:'⅛ A0',uso:'Dibujos escolares avanzados, proyectos'},
+  {fmt:'A4',dims:'210 × 297',area:'1/16 A0',uso:'Trabajos escolares, ejercicios en clase'},
+  {fmt:'A5',dims:'148 × 210',area:'1/32 A0',uso:'Bocetos y notas técnicas'},
+];
+
+const cuidados = [
+  {icon:'ti-hand-stop',color:'#185FA5',title:'Manejo del papel',text:'Sujeta el papel por las esquinas o bordes. Evita arrugarlo, doblarlo o apoyar objetos pesados sobre él.'},
+  {icon:'ti-pencil',color:'#1D9E75',title:'Presión del lápiz',text:'Traza con presión uniforme y moderada. Una presión excesiva marca el papel y dificulta el borrado.'},
+  {icon:'ti-eraser',color:'#D85A30',title:'Uso del borrador',text:'Borra con movimientos suaves en una sola dirección. Sacude los residuos con una brocha; no los soples para no humedecer el papel.'},
+  {icon:'ti-ruler',color:'#BA7517',title:'Instrumentos limpios',text:'Limpia las escuadras, regla T y compás con un paño seco antes de usarlos. El grafito acumulado ensucia el papel.'},
+  {icon:'ti-sun',color:'#533AB7',title:'Iluminación adecuada',text:'Trabaja con buena luz, preferiblemente natural o desde la izquierda para evitar sombras del brazo sobre el trazo.'},
+  {icon:'ti-clock',color:'#993556',title:'Orden de trazado',text:'Traza siempre de arriba hacia abajo y de izquierda a derecha para evitar manchar con la mano lo que ya dibujaste.'},
+  {icon:'ti-file-check',color:'#0F6E56',title:'Conservación del plano',text:'Guarda los planos enrollados o en carpeta rígida. Nunca los dobles. Protégelos de la humedad y el calor.'},
+  {icon:'ti-drop',color:'#3B6D11',title:'Evitar la humedad',text:'No trabajes con bebidas cerca del tablero. La humedad ondula el papel y borra los trazos a lápiz.'},
+];
+
+let fmtBuilt=false, cuidadoBuilt=false;
+
+function buildFormatos(){
+  if(fmtBuilt)return; fmtBuilt=true;
+  const tb=document.getElementById('fmt-tbody');
+  formatos.forEach((f,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="fmt-highlight">${f.fmt}</td><td>${f.dims} mm</td><td>${f.uso}</td>`;
+    tb.appendChild(tr);
+  });
+  const svg=document.getElementById('fmt-svg');
+  const rects=[
+    {x:10,y:10,w:200,h:140,label:'A0',fs:14},
+    {x:220,y:10,w:140,h:100,label:'A1',fs:12},
+    {x:370,y:10,w:100,h:70,label:'A2',fs:11},
+    {x:370,y:88,w:70,h:50,label:'A3',fs:10},
+    {x:448,y:88,w:50,h:35,label:'A4',fs:9},
+    {x:448,y:130,w:35,h:25,label:'A5',fs:8},
+  ];
+  const isDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const colors=['#E6F1FB','#B5D4F4','#85B7EB','#378ADD','#185FA5','#0C447C'];
+  const tcolors=['#0C447C','#0C447C','#042C53','#fff','#fff','#fff'];
+  rects.forEach((r,i)=>{
+    const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x',r.x);rect.setAttribute('y',r.y);
+    rect.setAttribute('width',r.w);rect.setAttribute('height',r.h);
+    rect.setAttribute('fill',colors[i]);rect.setAttribute('rx','4');
+    rect.setAttribute('stroke',isDark?'rgba(255,255,255,0.2)':'rgba(0,0,0,0.15)');
+    rect.setAttribute('stroke-width','1');
+    svg.appendChild(rect);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',r.x+r.w/2);t.setAttribute('y',r.y+r.h/2+4);
+    t.setAttribute('text-anchor','middle');t.setAttribute('font-size',r.fs);
+    t.setAttribute('font-weight','500');t.setAttribute('fill',tcolors[i]);
+    t.setAttribute('font-family',"'DM Sans',sans-serif");
+    t.textContent=r.label;svg.appendChild(t);
+  });
+}
+
+function buildCuidado(){
+  if(cuidadoBuilt)return; cuidadoBuilt=true;
+  const grid=document.getElementById('cuidado-grid');
+  cuidados.forEach(c=>{
+    const card=document.createElement('div');
+    card.className='cuidado-card';
+    card.innerHTML=`<i class="ti ${c.icon} cuidado-icon" style="color:${c.color};"></i><div class="cuidado-title">${c.title}</div><div class="cuidado-text">${c.text}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function buildLapizPanel(){
+  return `
+  <div class="detail-title"><i class="ti ti-pencil" style="margin-right:6px;color:var(--blue);"></i>Lápiz técnico</div>
+  <div class="detail-text" style="margin-bottom:.75rem;">Los lápices se clasifican según su dureza. La letra <strong>H</strong> (Hard = duro) indica mayor dureza y trazos más finos y claros. La letra <strong>B</strong> (Black = negro) indica mayor blandura y trazos más gruesos y oscuros. El <strong>HB</strong> es el punto intermedio.</div>
+  <div class="lapiz-arrow"><span><i class="ti ti-arrow-left" style="font-size:12px;"></i> Más duro · trazo fino y claro</span><span>Más blando · trazo grueso y oscuro <i class="ti ti-arrow-right" style="font-size:12px;"></i></span></div>
+  <div class="lapiz-scale" id="lapiz-scale"></div>
+  <div class="lapiz-detail" id="lapiz-detail">Selecciona un tipo de lápiz para ver su descripción.</div>
+  <div class="video-section">
+    <div class="video-section-title"><i class="ti ti-brand-youtube" style="color:#E24B4A;font-size:16px;"></i> Videos de apoyo — Lápices de dibujo</div>
+    <div class="video-cards">
+      <a class="video-btn" href="https://www.youtube.com/watch?v=ZyLg_4OUpyU" target="_blank" rel="noopener">
+        <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+        <div class="video-info"><div class="video-title">Instrumentos de dibujo técnico básico</div><div class="video-meta">Incluye lápices, tipos, formatos y materiales esenciales</div></div>
+        <span class="video-ext"><i class="ti ti-external-link"></i></span>
+      </a>
+      <a class="video-btn" href="https://www.youtube.com/watch?v=-ipvZXu_cfA" target="_blank" rel="noopener">
+        <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+        <div class="video-info"><div class="video-title">Clase #1 — Instrumentos básicos</div><div class="video-meta">Introducción completa al manejo de instrumentos</div></div>
+        <span class="video-ext"><i class="ti ti-external-link"></i></span>
+      </a>
+    </div>
+  </div>`;
+}
+
+function initLapiz(){
+  const scale=document.getElementById('lapiz-scale');
+  if(!scale||scale.children.length>0)return;
+  lapices.forEach((l,i)=>{
+    const item=document.createElement('div');
+    item.className='lapiz-item'+(i===5?' active-lap':'');
+    const lightness=i<3?'light':i<5?'mid':'dark';
+    const bg=i===5?'#185FA5':l.color;
+    const fc=i>=5?'#fff':i>=3?'#fff':'#2C2C2A';
+    const border=i===5?'#185FA5':l.color;
+    item.innerHTML=`<div class="lapiz-circle" style="background:${bg};color:${fc};border-color:${border};">${l.cod}</div><div class="lapiz-label">${l.tipo.split(' ')[0]}</div>`;
+    item.onclick=()=>{
+      document.querySelectorAll('.lapiz-item').forEach(x=>x.classList.remove('active-lap'));
+      item.classList.add('active-lap');
+      document.getElementById('lapiz-detail').innerHTML=`<strong>${l.cod} — ${l.tipo}:</strong> ${l.uso}`;
+    };
+    scale.appendChild(item);
+  });
+  document.getElementById('lapiz-detail').innerHTML=`<strong>HB — Intermedio:</strong> ${lapices[5].uso}`;
+}
+
+const lineas = [
+  {name:'Línea continua gruesa',uso:'Representa las aristas y contornos visibles del objeto. Es la línea principal del dibujo técnico.',color:'#185FA5',dash:'',w:3},
+  {name:'Línea continua fina',uso:'Se usa para líneas auxiliares, de acotación, de referencia y sombreado de superficies.',color:'#378ADD',dash:'',w:1},
+  {name:'Línea discontinua',uso:'Indica aristas y contornos ocultos, es decir, partes del objeto que no son visibles desde el punto de vista del dibujo.',color:'#888780',dash:'6,4',w:2},
+  {name:'Línea de trazo y punto',uso:'Se usa para los ejes de simetría y líneas de centro de circunferencias o elementos simétricos.',color:'#D85A30',dash:'14,4,3,4',w:1.5},
+  {name:'Línea de doble trazo y punto',uso:'Indica la posición límite de piezas móviles o elementos en dos posiciones diferentes.',color:'#BA7517',dash:'14,4,3,4,3,4',w:1},
+];
+
+const normas = [
+  {badge:'Formato',title:'Tamaño del papel',body:'Los dibujos técnicos se realizan en formatos normalizados: A4 (210×297 mm) para trabajos escolares, A3 (297×420 mm) para planos más detallados. Siempre se traza el recuadro de dibujo y el cuadro de información (rotulado) en la esquina inferior derecha.'},
+  {badge:'Escala',title:'Relación de escala',body:'La escala indica la relación entre el tamaño del dibujo y el tamaño real del objeto. Escala 1:1 = tamaño natural. Escala 1:2 = la mitad del tamaño real. Escala 2:1 = el doble del tamaño real. Siempre se indica la escala usada en el rotulado.'},
+  {badge:'Acotación',title:'Medidas en el dibujo',body:'Acotar es indicar las medidas reales del objeto sobre el dibujo. Se usan líneas de cota (paralelas al elemento), líneas auxiliares (perpendiculares) y flechas de extremo. Las cifras de cota se escriben sobre la línea y siempre en milímetros (mm) salvo indicación contraria.'},
+  {badge:'Rotulado',title:'Letra técnica',body:'La escritura en dibujo técnico debe ser clara, uniforme y legible. Se usa letra normalizada (verticals o inclinadas 15°), siempre con lápiz o tiralíneas, sin adornos y con altura de letra constante. El cuadro de rotulación incluye: nombre, fecha, escala, institución y número de plano.'},
+  {badge:'Vistas',title:'Sistema de vistas',body:'Un objeto tridimensional se representa mediante vistas ortogonales: planta (desde arriba), alzado (desde el frente) y perfil (desde un lado). Esto permite entender completamente la forma del objeto usando solo líneas en un plano 2D.'},
+];
+
+const quizData = [
+  {q:'¿Qué instrumento se usa para trazar líneas horizontales perfectas?',opts:['Compás','Escuadra','Regla T','Escalímetro'],ans:2},
+  {q:'¿Qué tipo de línea se usa para representar aristas ocultas del objeto?',opts:['Línea continua gruesa','Línea discontinua','Línea de trazo y punto','Línea continua fina'],ans:1},
+  {q:'¿Qué significa la escala 1:2?',opts:['El dibujo es el doble del tamaño real','El dibujo es la mitad del tamaño real','El dibujo tiene el mismo tamaño real','El dibujo mide 1 cm por cada 2 mm real'],ans:1},
+  {q:'¿Cuál es el uso principal de las escuadras?',opts:['Medir diámetros de circunferencias','Trazar circunferencias exactas','Trazar ángulos y líneas verticales','Marcar escalas de reducción'],ans:2},
+  {q:'¿Qué nombre recibe la representación de un objeto visto desde arriba?',opts:['Alzado','Perfil','Perspectiva','Planta'],ans:3},
+];
+
+let currentQ=0, score=0, answered=false;
+
+function showTab(id){
+  const ids=['intro','instrumentos','lineas','formatos','normas','cuidado','quiz'];
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',ids[i]===id);});
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if(id==='formatos')buildFormatos();
+  if(id==='cuidado')buildCuidado();
+}
+
+function buildInstrumentos(){
+  const g=document.getElementById('inst-grid');
+  instrumentos.forEach(inst=>{
+    const c=document.createElement('div');
+    c.className='card';
+    c.innerHTML=`<i class="ti ${inst.icon}"></i><div class="card-name">${inst.name}</div><div class="card-desc">${inst.desc.substring(0,50)}…</div>`;
+    c.onclick=()=>{
+      document.querySelectorAll('#inst-grid .card').forEach(x=>x.classList.remove('selected'));
+      c.classList.add('selected');
+      if(inst.special==='escuadras'){
+        document.getElementById('inst-detail').innerHTML=buildEscuadrasPanel();
+        initEscuadras();
+      } else if(inst.special==='lapiz'){
+        document.getElementById('inst-detail').innerHTML=buildLapizPanel();
+        initLapiz();
+      } else {
+        document.getElementById('inst-detail').innerHTML=`<div class="detail-title"><i class="ti ${inst.icon}" style="margin-right:6px;color:var(--blue);"></i>${inst.name}</div><div class="detail-text">${inst.desc}</div>`;
+      }
+    };
+    g.appendChild(c);
+  });
+}
+
+function buildEscuadrasPanel(){
+  return `
+  <div class="detail-title"><i class="ti ti-triangle" style="margin-right:6px;color:var(--blue);"></i>Escuadras</div>
+  <div class="detail-text">Instrumentos triangulares usados en pares para trazar líneas con ángulos precisos. Existen dos tipos: la escuadra de <strong>45°</strong> (triángulo isósceles) y la escuadra de <strong>60°/30°</strong> (triángulo escaleno).</div>
+  <div class="esq-panel">
+    <div class="esq-tabs">
+      <button class="esq-tab active" onclick="switchEsqTab('uso')">¿Cómo se usan?</button>
+      <button class="esq-tab" onclick="switchEsqTab('combo')">Combinaciones de ángulos</button>
+    </div>
+    <div id="esq-uso" class="esq-content active">
+      <div class="esq-step-list">
+        <div class="esq-step"><span class="esq-step-num">1</span>Apoya la regla T en el borde izquierdo del tablero para que quede fija y horizontal.</div>
+        <div class="esq-step"><span class="esq-step-num">2</span>Coloca la escuadra con su base (hipotenusa) sobre la regla T. Así garantizas que esté perfectamente alineada.</div>
+        <div class="esq-step"><span class="esq-step-num">3</span>Desliza la escuadra a lo largo de la regla T sin levantarla para trazar líneas paralelas verticales.</div>
+        <div class="esq-step"><span class="esq-step-num">4</span>Para trazar ángulos, coloca el cateto de la escuadra sobre la línea de referencia y traza sobre el otro cateto.</div>
+        <div class="esq-step"><span class="esq-step-num">5</span>Sostén el lápiz inclinado hacia la escuadra (~60°) y desplázalo siempre en el mismo sentido para obtener líneas uniformes.</div>
+      </div>
+      <div style="background:var(--blue-light);border-radius:var(--radius-md);padding:10px 14px;font-size:12px;color:var(--blue-dark);">
+        <i class="ti ti-info-circle" style="margin-right:4px;"></i>Consejo: nunca levantes la escuadra mientras trazas; deslízala suavemente para mantener el ángulo exacto.
+      </div>
+      <div class="video-section">
+        <div class="video-section-title"><i class="ti ti-brand-youtube" style="color:#E24B4A;font-size:16px;"></i> Videos de apoyo — Escuadras</div>
+        <div class="video-cards">
+          <a class="video-btn" href="https://www.youtube.com/watch?v=7GoNVQs7Vw4" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Las escuadras — características y uso</div><div class="video-meta">Explicación de todos los ángulos y formas de usar las escuadras</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=3BivS_INPI8" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Manejo de escuadras y ángulos</div><div class="video-meta">Términos, conceptos y ubicación de los ángulos en las escuadras</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=ByqMnZZH7ks" target="_blank" rel="noopener">
+            <div class="video-thumb"><i class="ti ti-player-play"></i></div>
+            <div class="video-info"><div class="video-title">Trazado de líneas a 15°, 30°, 45°, 60°, 75°</div><div class="video-meta">Cómo combinar escuadras para obtener cada ángulo</div></div>
+            <span class="video-ext"><i class="ti ti-external-link"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div id="esq-combo" class="esq-content">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:.75rem;line-height:1.6;">Selecciona un ángulo para ver qué escuadras debes combinar y cómo posicionarlas:</div>
+      <div class="angle-grid" id="angle-grid"></div>
+      <div class="esq-svg-wrap"><svg id="esq-svg" width="100%" height="220" viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <div id="esq-desc" style="margin-top:.75rem;font-size:13px;color:var(--text2);line-height:1.7;padding:10px 12px;background:var(--bg2);border-radius:var(--radius-md);"></div>
+    </div>
+  </div>`;
+}
+
+const angulos = [
+  {deg:90, label:'90°', how:'Escuadra 45° sola (cateto vertical)', color:'#185FA5',
+   desc:'Apoya la hipotenusa de la escuadra de 45° sobre la regla T. El cateto vertical te da exactamente 90° respecto a la horizontal.',
+   draw:(svg)=>{
+     addBase(svg); addLine(svg,100,180,100,40,'#185FA5',2.5,'Cateto 90°',110,110);
+     addEsq45(svg,60,180,'#185FA5',0.85);
+   }},
+  {deg:45, label:'45°', how:'Escuadra de 45° (ángulo agudo)', color:'#1D9E75',
+   desc:'Usa la escuadra de 45°. Su ángulo agudo traza exactamente 45° respecto a la horizontal cuando la hipotenusa reposa sobre la regla T.',
+   draw:(svg)=>{
+     addBase(svg); addLine(svg,80,180,200,60,'#1D9E75',2.5,'45°',210,75);
+     addEsq45(svg,60,180,'#1D9E75',0.85);
+   }},
+  {deg:30, label:'30°', how:'Escuadra de 60°/30° (ángulo de 30°)', color:'#D85A30',
+   desc:'Usa la escuadra de 60°/30°. Apoya el cateto largo sobre la regla T y traza por el cateto corto para obtener 30° respecto a la horizontal.',
+   draw:(svg)=>{
+     addBase(svg); addLine(svg,80,180,240,107,'#D85A30',2.5,'30°',248,100);
+     addEsq6030(svg,60,180,'#D85A30',0.85);
+   }},
+  {deg:60, label:'60°', how:'Escuadra de 60°/30° (ángulo de 60°)', color:'#BA7517',
+   desc:'Usa la escuadra de 60°/30°. Apoya el cateto corto sobre la regla T y traza por el cateto largo para obtener 60° respecto a la horizontal.',
+   draw:(svg)=>{
+     addBase(svg); addLine(svg,80,180,150,60,'#BA7517',2.5,'60°',155,55);
+     addEsq6030(svg,60,180,'#BA7517',0.85);
+   }},
+  {deg:75, label:'75°', how:'45° + 30° (combinadas)', color:'#533AB7',
+   desc:'Combina ambas escuadras: coloca la de 60°/30° con el ángulo de 30° sobre la horizontal, luego apoya la de 45° sobre su hipotenusa. La suma 45°+30° da 75°.',
+   draw:(svg)=>{
+     addBase(svg); addLine(svg,80,180,130,47,'#533AB7',2.5,'75°',135,42);
+     addEsq45(svg,60,180,'#533AB7',0.6); addEsq6030(svg,100,180,'#533AB7',0.6);
+   }},
+  {deg:15, label:'15°', how:'45° − 30° (combinadas)', color:'#993556',
+   desc:'Combina ambas escuadras: superpón la de 45° y la de 60°/30° de modo que sus hipotenusas coincidan. La diferencia 45°−30° da el ángulo de 15°.',
+   draw:(svg)=>{
+     addBase(svg); addLine(svg,80,180,280,153,'#993556',2.5,'15°',285,148);
+     addEsq45(svg,60,180,'#993556',0.6); addEsq6030(svg,60,180,'#993556',0.55);
+   }},
+];
+
+function addBase(svg){
+  const isDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const bc=isDark?'rgba(255,255,255,0.15)':'rgba(0,0,0,0.12)';
+  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1','20');line.setAttribute('y1','185');
+  line.setAttribute('x2','540');line.setAttribute('y2','185');
+  line.setAttribute('stroke',bc);line.setAttribute('stroke-width','1.5');
+  svg.appendChild(line);
+  const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x','525');t.setAttribute('y','200');
+  t.setAttribute('font-size','10');t.setAttribute('fill',bc);
+  t.setAttribute('font-family',"'DM Sans',sans-serif");t.textContent='Base (regla T)';
+  svg.appendChild(t);
+}
+
+function addLine(svg,x1,y1,x2,y2,color,w,label,lx,ly){
+  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1',x1);line.setAttribute('y1',y1);
+  line.setAttribute('x2',x2);line.setAttribute('y2',y2);
+  line.setAttribute('stroke',color);line.setAttribute('stroke-width',w);
+  line.setAttribute('stroke-linecap','round');
+  svg.appendChild(line);
+  if(label){
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',lx);t.setAttribute('y',ly);
+    t.setAttribute('font-size','12');t.setAttribute('fill',color);
+    t.setAttribute('font-weight','500');t.setAttribute('font-family',"'DM Sans',sans-serif");
+    t.textContent=label;svg.appendChild(t);
+  }
+}
+
+function addEsq45(svg,ox,oy,color,op){
+  const pts=`${ox},${oy} ${ox+110},${oy} ${ox},${oy-110}`;
+  const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  poly.setAttribute('points',pts);poly.setAttribute('fill',color);
+  poly.setAttribute('fill-opacity',op*0.18);
+  poly.setAttribute('stroke',color);poly.setAttribute('stroke-width','1.5');
+  poly.setAttribute('stroke-opacity',op);svg.appendChild(poly);
+  const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x',ox+30);t.setAttribute('y',oy-20);
+  t.setAttribute('font-size','10');t.setAttribute('fill',color);
+  t.setAttribute('fill-opacity',op);t.setAttribute('font-family',"'DM Sans',sans-serif");
+  t.textContent='45°';svg.appendChild(t);
+}
+
+function addEsq6030(svg,ox,oy,color,op){
+  const pts=`${ox},${oy} ${ox+120},${oy} ${ox+40},${oy-69}`;
+  const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  poly.setAttribute('points',pts);poly.setAttribute('fill',color);
+  poly.setAttribute('fill-opacity',op*0.18);
+  poly.setAttribute('stroke',color);poly.setAttribute('stroke-width','1.5');
+  poly.setAttribute('stroke-opacity',op);svg.appendChild(poly);
+  const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x',ox+55);t.setAttribute('y',oy-55);
+  t.setAttribute('font-size','10');t.setAttribute('fill',color);
+  t.setAttribute('fill-opacity',op);t.setAttribute('font-family',"'DM Sans',sans-serif");
+  t.textContent='60°/30°';svg.appendChild(t);
+}
+
+function initEscuadras(){
+  const grid=document.getElementById('angle-grid');
+  if(!grid)return;
+  angulos.forEach((a,i)=>{
+    const card=document.createElement('div');
+    card.className='angle-card'+(i===0?' active-ang':'');
+    card.innerHTML=`<div class="angle-deg">${a.label}</div><div class="angle-how">${a.how}</div>`;
+    card.onclick=()=>{
+      document.querySelectorAll('.angle-card').forEach(x=>x.classList.remove('active-ang'));
+      card.classList.add('active-ang');
+      drawAngle(i);
+    };
+    grid.appendChild(card);
+  });
+  drawAngle(0);
+}
+
+function drawAngle(idx){
+  const svg=document.getElementById('esq-svg');
+  const desc=document.getElementById('esq-desc');
+  if(!svg||!desc)return;
+  svg.innerHTML='';
+  angulos[idx].draw(svg);
+  desc.textContent=angulos[idx].desc;
+}
+
+function switchEsqTab(id){
+  document.querySelectorAll('.esq-tab').forEach((t,i)=>{
+    t.classList.toggle('active',['uso','combo'][i]===id);
+  });
+  document.querySelectorAll('.esq-content').forEach(c=>c.classList.remove('active'));
+  const el=document.getElementById('esq-'+id);
+  if(el){el.classList.add('active'); if(id==='combo')initEscuadras();}
+}
+
+function buildLineas(){
+  const list=document.getElementById('line-list');
+  lineas.forEach((l,i)=>{
+    const item=document.createElement('div');
+    item.className='line-item';
+    const svgP=`<svg class="line-preview" height="20" viewBox="0 0 80 20" xmlns="http://www.w3.org/2000/svg"><line x1="4" y1="10" x2="76" y2="10" stroke="${l.color}" stroke-width="${l.w}" stroke-dasharray="${l.dash}" stroke-linecap="round"/></svg>`;
+    item.innerHTML=`${svgP}<div><div class="line-name">${l.name}</div><div class="line-use">${l.uso.substring(0,45)}…</div></div>`;
+    item.onclick=()=>{
+      document.querySelectorAll('.line-item').forEach(x=>x.classList.remove('selected'));
+      item.classList.add('selected');
+      document.getElementById('line-detail').innerHTML=`<div class="detail-title">${l.name}</div><div class="detail-text">${l.uso}</div>`;
+      drawLinesDemo(i);
+    };
+    list.appendChild(item);
+  });
+  drawLinesDemo(-1);
+}
+
+function drawLinesDemo(sel){
+  const svg=document.getElementById('lines-svg');
+  const isDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const txtC=isDark?'#B4B2A9':'#5F5E5A';
+  svg.innerHTML='';
+  lineas.forEach((l,i)=>{
+    const y=20+i*30;
+    const alpha=(sel===-1||sel===i)?1:0.2;
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1','10');line.setAttribute('y1',y);
+    line.setAttribute('x2','220');line.setAttribute('y2',y);
+    line.setAttribute('stroke',l.color);line.setAttribute('stroke-width',l.w);
+    if(l.dash)line.setAttribute('stroke-dasharray',l.dash);
+    line.setAttribute('stroke-linecap','round');
+    line.setAttribute('opacity',alpha);
+    svg.appendChild(line);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x','235');t.setAttribute('y',y+4);
+    t.setAttribute('font-size','11');t.setAttribute('fill',txtC);
+    t.setAttribute('font-family',"'DM Sans',sans-serif");
+    t.setAttribute('opacity',alpha);
+    t.textContent=l.name;
+    svg.appendChild(t);
+  });
+}
+
+function buildNormas(){
+  const list=document.getElementById('norma-list');
+  normas.forEach(n=>{
+    const card=document.createElement('div');
+    card.className='norma-card';
+    card.innerHTML=`<div class="norma-header"><span class="norma-badge">${n.badge}</span><span class="norma-title">${n.title}</span></div><div class="norma-body">${n.body}</div>`;
+    list.appendChild(card);
+  });
+}
+
+function renderQuestion(){
+  const area=document.getElementById('quiz-area');
+  if(currentQ>=quizData.length){
+    area.innerHTML=`<div class="detail-box"><div class="detail-title">¡Terminaste el repaso!</div><div class="detail-text" style="margin-top:8px;">Obtuviste <strong>${score} de ${quizData.length}</strong> respuestas correctas.<br><br>${score>=4?'¡Excelente! Tienes una muy buena base sobre dibujo técnico.':score>=2?'Buen intento. Repasa los temas donde tuviste dificultades.':'Sigue practicando. Revisa las secciones anteriores y vuelve a intentarlo.'}</div></div><br><button class="btn btn-primary" onclick="resetQuiz()">Reiniciar quiz</button>`;
+    return;
+  }
+  const q=quizData[currentQ];
+  answered=false;
+  const pct=Math.round((currentQ/quizData.length)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=currentQ+' / '+quizData.length;
+  area.innerHTML=`<div class="quiz-q">${currentQ+1}. ${q.q}</div><div class="quiz-opts">${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answer(${i})">${o}</button>`).join('')}</div><div class="quiz-feedback" id="qfb"></div>`;
+}
+
+function answer(idx){
+  if(answered)return;
+  answered=true;
+  const q=quizData[currentQ];
+  const opts=document.querySelectorAll('.quiz-opt');
+  const fb=document.getElementById('qfb');
+  opts.forEach((o,i)=>{
+    o.disabled=true;
+    if(i===q.ans)o.classList.add('correct');
+    else if(i===idx&&idx!==q.ans)o.classList.add('wrong');
+  });
+  if(idx===q.ans){
+    score++;
+    fb.className='quiz-feedback show ok';
+    fb.textContent='✓ ¡Correcto! Muy bien.';
+  } else {
+    fb.className='quiz-feedback show fail';
+    fb.textContent='✗ Incorrecto. La respuesta correcta es: '+q.opts[q.ans];
+  }
+  setTimeout(()=>{currentQ++;renderQuestion();},1900);
+}
+
+function resetQuiz(){
+  currentQ=0;score=0;answered=false;
+  document.getElementById('prog-fill').style.width='0%';
+  document.getElementById('prog-label').textContent='0 / '+quizData.length;
+  renderQuestion();
+}
+
+buildInstrumentos();
+buildLineas();
+buildNormas();
+renderQuestion();
+</script>
+</body>
+</html>
