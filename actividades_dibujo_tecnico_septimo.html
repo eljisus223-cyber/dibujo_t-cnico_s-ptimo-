@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actividades · Dibujo Técnico · Grado 7°</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#fff; --bg2:#f5f5f3; --bg3:#eeede9;
+    --text:#1a1a18; --text2:#5f5e5a;
+    --border:rgba(0,0,0,0.12); --border2:rgba(0,0,0,0.22);
+    --blue:#185FA5; --blue-light:#E6F1FB; --blue-dark:#0C447C;
+    --green:#3B6D11; --green-light:#EAF3DE;
+    --red:#A32D2D; --red-light:#FCEBEB;
+    --yellow:#BA7517; --yellow-light:#FAEEDA;
+    --radius-md:8px; --radius-lg:12px;
+  }
+  html,body{width:100%;min-height:100%;font-family:'DM Sans',sans-serif;background:var(--bg3);color:var(--text);}
+
+  /* BIENVENIDA */
+  .welcome{min-height:100vh;background:linear-gradient(160deg,#042C53 0%,#0C447C 50%,#185FA5 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;position:relative;overflow:hidden;}
+  .welcome.hiding{animation:fadeOut .5s ease forwards;}
+  @keyframes fadeOut{to{opacity:0;transform:scale(1.03);}}
+  .w-deco{position:absolute;pointer-events:none;opacity:0.06;}
+  .w-logo{margin-bottom:1.5rem;animation:slideDown .7s ease;}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  .w-title{font-family:'DM Serif Display',serif;font-size:36px;color:#fff;line-height:1.15;margin-bottom:.4rem;animation:slideDown .75s ease .1s both;}
+  .w-title span{color:#85B7EB;}
+  .w-sub{font-size:12px;color:rgba(255,255,255,0.55);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.75rem;animation:slideDown .75s ease .2s both;}
+  .w-pills{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:2rem;animation:slideDown .75s ease .3s both;}
+  .w-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:0.5px solid rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(255,255,255,0.85);}
+  .w-btn{display:flex;align-items:center;gap:10px;background:#fff;color:#0C447C;border:none;border-radius:30px;padding:13px 34px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:slideDown .75s ease .4s both;}
+  .w-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 28px rgba(0,0,0,0.3);}
+  .w-btn i{font-size:17px;transition:transform .2s;}
+  .w-btn:hover i{transform:translateX(4px);}
+
+  /* LAYOUT */
+  .layout{display:none;min-height:100vh;flex-direction:column;}
+  .layout.show{display:flex;animation:fadeIn .4s ease;}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  /* CABECERA */
+  .header{background:linear-gradient(135deg,#042C53 0%,#0C447C 60%,#185FA5 100%);display:flex;align-items:center;gap:1rem;padding:0 1.5rem;height:68px;border-bottom:2px solid rgba(55,138,221,0.4);position:sticky;top:0;z-index:50;flex-shrink:0;}
+  .h-title{font-family:'DM Serif Display',serif;font-size:19px;color:#fff;}
+  .h-title span{color:#85B7EB;}
+  .h-sub{font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;letter-spacing:.05em;text-transform:uppercase;}
+  .h-badge{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:0.5px solid rgba(255,255,255,0.2);border-radius:20px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,0.8);font-weight:500;}
+
+  /* TABS */
+  .act-tabs{background:var(--bg);border-bottom:0.5px solid var(--border);display:flex;gap:0;padding:0 1.5rem;}
+  .act-tab{display:flex;align-items:center;gap:7px;padding:14px 18px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text2);border-bottom:2.5px solid transparent;transition:all .2s;font-family:'DM Sans',sans-serif;}
+  .act-tab:hover{color:var(--text);}
+  .act-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .act-tab i{font-size:16px;}
+
+  /* CONTENIDO */
+  .act-content{flex:1;padding:2rem 1.5rem;max-width:880px;margin:0 auto;width:100%;}
+  .act-section{display:none;}
+  .act-section.active{display:block;}
+  .sec-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:.4rem;}
+  .sec-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:1.5rem;}
+
+  /* DRAG AND DROP */
+  .drag-area{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.25rem;}
+  .drag-col-title{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem;}
+  .drag-items{display:flex;flex-direction:column;gap:8px;min-height:300px;}
+  .drag-item{background:var(--blue-light);border:1.5px solid var(--blue);border-radius:var(--radius-md);padding:9px 14px;font-size:13px;color:var(--blue-dark);font-weight:500;cursor:grab;user-select:none;transition:transform .15s,box-shadow .15s;display:flex;align-items:center;gap:8px;}
+  .drag-item:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(24,95,165,0.2);}
+  .drag-item.dragging{opacity:.4;cursor:grabbing;}
+  .drop-zones{display:flex;flex-direction:column;gap:10px;}
+  .drop-zone-wrap{}
+  .drop-label{font-size:12px;color:var(--text2);margin-bottom:4px;line-height:1.5;}
+  .drop-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-md);padding:9px 14px;min-height:44px;font-size:12px;color:var(--text2);transition:all .2s;display:flex;align-items:center;gap:8px;background:var(--bg);}
+  .drop-zone.over{border-color:var(--blue);background:var(--blue-light);}
+  .drop-zone.filled{border-style:solid;}
+  .drop-zone.correct-zone{border-color:#639922;background:var(--green-light);}
+  .drop-zone.wrong-zone{border-color:#E24B4A;background:var(--red-light);}
+
+  /* IDENTIFICACION */
+  .ident-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:1.25rem;}
+  .ident-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;text-align:center;transition:border-color .2s;}
+  .ident-svg{margin:0 auto .75rem;display:flex;justify-content:center;}
+  .ident-q{font-size:13px;font-weight:500;color:var(--text);margin-bottom:.75rem;}
+  .ident-opts{display:flex;flex-direction:column;gap:6px;}
+  .ident-opt{padding:7px 10px;border-radius:var(--radius-md);border:0.5px solid var(--border);font-size:12px;cursor:pointer;background:var(--bg);color:var(--text2);transition:all .18s;font-family:'DM Sans',sans-serif;text-align:left;}
+  .ident-opt:hover:not(:disabled){border-color:var(--blue);color:var(--blue-dark);background:var(--blue-light);}
+  .ident-opt.correct{background:var(--green-light);border-color:#639922;color:var(--green);}
+  .ident-opt.wrong{background:var(--red-light);border-color:#E24B4A;color:var(--red);}
+
+  /* CRUCIGRAMA */
+  .crossword-wrap{display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start;}
+  .cw-grid{display:inline-grid;gap:2px;}
+  .cw-cell{width:32px;height:32px;background:var(--bg2);border:0.5px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;}
+  .cw-cell.active{background:var(--bg);border-color:var(--border2);}
+  .cw-cell.black{background:#2C2C2A;border-color:#1a1a18;}
+  .cw-cell input{width:100%;height:100%;background:transparent;border:none;outline:none;text-align:center;font-size:13px;font-weight:500;color:var(--text);font-family:'DM Sans',sans-serif;text-transform:uppercase;cursor:pointer;}
+  .cw-cell input:focus{background:var(--blue-light);border-radius:3px;}
+  .cw-cell.correct-cw{background:var(--green-light)!important;}
+  .cw-cell.wrong-cw{background:var(--red-light)!important;}
+  .cw-num{position:absolute;top:1px;left:2px;font-size:7px;color:var(--text2);font-weight:500;line-height:1;pointer-events:none;}
+  .cw-clues{display:flex;flex-direction:column;gap:1.25rem;}
+  .cw-clue-group-title{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;}
+  .cw-clue{font-size:12px;color:var(--text2);line-height:1.6;padding:5px 0;border-bottom:0.5px solid var(--border);}
+  .cw-clue strong{color:var(--blue);}
+
+  /* BOTONES */
+  .act-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem;}
+  .check-btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;border:none;border-radius:20px;padding:9px 22px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+  .check-btn:hover{background:var(--blue-dark);transform:translateY(-1px);}
+  .reset-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg);color:var(--text2);border:0.5px solid var(--border);border-radius:20px;padding:8px 18px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+  .reset-btn:hover{border-color:var(--border2);color:var(--text);}
+  .feedback{margin-top:.75rem;font-size:13px;padding:10px 14px;border-radius:var(--radius-md);display:none;}
+  .feedback.show{display:block;}
+  .feedback.ok{background:var(--green-light);color:var(--green);}
+  .feedback.partial{background:var(--yellow-light);color:var(--yellow);}
+</style>
+</head>
+<body>
+
+<!-- BIENVENIDA -->
+<div class="welcome" id="welcome">
+  <svg class="w-deco" style="top:5%;left:4%;" width="200" height="200" viewBox="0 0 200 200">
+    <polygon points="10,190 10,10 160,190" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <line x1="10" y1="190" x2="190" y2="190" stroke="#fff" stroke-width="1.5"/>
+  </svg>
+  <svg class="w-deco" style="bottom:8%;right:5%;" width="180" height="180" viewBox="0 0 180 180">
+    <circle cx="90" cy="90" r="80" fill="none" stroke="#fff" stroke-width="1.2"/>
+    <line x1="10" y1="90" x2="170" y2="90" stroke="#fff" stroke-width="0.8"/>
+    <line x1="90" y1="10" x2="90" y2="170" stroke="#fff" stroke-width="0.8"/>
+  </svg>
+  <div class="w-logo">
+    <svg width="90" height="90" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="110" height="110" rx="24" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+      <line x1="18" y1="92" x2="92" y2="92" stroke="#85B7EB" stroke-width="2.5" stroke-linecap="round"/>
+      <polygon points="18,92 18,22 56,92" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="92,92 92,48 68,92" fill="none" stroke="#85B7EB" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="46" cy="38" r="5" fill="#85B7EB"/>
+      <line x1="46" y1="43" x2="30" y2="88" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="46" y1="43" x2="82" y2="88" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="w-title">Actividades · Dibujo <span>Técnico</span></div>
+  <div class="w-sub">Grado 7° · Tecnología e Informática</div>
+  <div class="w-pills">
+    <div class="w-pill"><i class="ti ti-drag-drop" style="font-size:13px;"></i> Arrastra y suelta</div>
+    <div class="w-pill"><i class="ti ti-eye" style="font-size:13px;"></i> Identificación visual</div>
+    <div class="w-pill"><i class="ti ti-grid" style="font-size:13px;"></i> Crucigrama técnico</div>
+  </div>
+  <button class="w-btn" onclick="enterApp()">
+    <i class="ti ti-arrow-right"></i> Comenzar actividades
+  </button>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout" id="main-layout">
+  <div class="header">
+    <svg width="40" height="40" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="110" height="110" rx="20" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <line x1="18" y1="92" x2="92" y2="92" stroke="#85B7EB" stroke-width="3" stroke-linecap="round"/>
+      <polygon points="18,92 18,22 56,92" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="46" cy="38" r="5" fill="#85B7EB"/>
+      <line x1="46" y1="43" x2="30" y2="88" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <line x1="46" y1="43" x2="82" y2="88" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="h-title">Actividades · Dibujo <span>Técnico</span></div>
+      <div class="h-sub">Grado 7° · Tecnología e Informática</div>
+    </div>
+    <div class="h-badge"><i class="ti ti-sparkles" style="font-size:13px;"></i> Aprende jugando</div>
+  </div>
+
+  <div class="act-tabs">
+    <button class="act-tab active" onclick="showAct('drag')"><i class="ti ti-drag-drop"></i> Arrastra y suelta</button>
+    <button class="act-tab" onclick="showAct('ident')"><i class="ti ti-eye"></i> Identificación visual</button>
+    <button class="act-tab" onclick="showAct('cross')"><i class="ti ti-grid"></i> Crucigrama técnico</button>
+  </div>
+
+  <div class="act-content">
+
+    <!-- ARRASTRA Y SUELTA -->
+    <div class="act-section active" id="act-drag">
+      <div class="sec-title">Arrastra y suelta</div>
+      <div class="sec-desc">Arrastra cada instrumento hacia la casilla que describe su función principal. Suéltalo sobre la zona punteada correcta.</div>
+      <div class="drag-area">
+        <div>
+          <div class="drag-col-title"><i class="ti ti-tool" style="margin-right:4px;"></i>Instrumentos</div>
+          <div class="drag-items" id="drag-items"></div>
+        </div>
+        <div>
+          <div class="drag-col-title"><i class="ti ti-target" style="margin-right:4px;"></i>Funciones</div>
+          <div class="drop-zones" id="drop-zones"></div>
+        </div>
+      </div>
+      <div class="act-btn-row">
+        <button class="check-btn" onclick="checkDrag()"><i class="ti ti-check"></i> Verificar</button>
+        <button class="reset-btn" onclick="buildDrag()"><i class="ti ti-refresh"></i> Reiniciar</button>
+      </div>
+      <div class="feedback" id="drag-fb"></div>
+    </div>
+
+    <!-- IDENTIFICACION VISUAL -->
+    <div class="act-section" id="act-ident">
+      <div class="sec-title">Identificación visual</div>
+      <div class="sec-desc">Observa cada ilustración e identifica el instrumento o tipo de línea que se muestra. Selecciona la opción correcta.</div>
+      <div class="ident-grid" id="ident-grid"></div>
+      <div class="act-btn-row">
+        <button class="reset-btn" onclick="buildIdent()"><i class="ti ti-refresh"></i> Reiniciar</button>
+      </div>
+    </div>
+
+    <!-- CRUCIGRAMA -->
+    <div class="act-section" id="act-cross">
+      <div class="sec-title">Crucigrama técnico</div>
+      <div class="sec-desc">Completa el crucigrama con términos del dibujo técnico. Lee las pistas y escribe una letra por casilla.</div>
+      <div class="crossword-wrap">
+        <div>
+          <div class="cw-grid" id="cw-grid"></div>
+          <div class="act-btn-row">
+            <button class="check-btn" onclick="checkCW()"><i class="ti ti-check"></i> Verificar</button>
+            <button class="reset-btn" onclick="buildCW()"><i class="ti ti-refresh"></i> Reiniciar</button>
+          </div>
+          <div class="feedback" id="cw-fb"></div>
+        </div>
+        <div class="cw-clues" id="cw-clues"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* NAVEGACION */
+function enterApp(){
+  const w=document.getElementById('welcome');
+  w.classList.add('hiding');
+  setTimeout(()=>{
+    w.style.display='none';
+    const l=document.getElementById('main-layout');
+    l.classList.add('show');
+    buildDrag(); buildIdent(); buildCW();
+  },480);
+}
+function showAct(id){
+  document.querySelectorAll('.act-tab').forEach((t,i)=>{
+    t.classList.toggle('active',['drag','ident','cross'][i]===id);
+  });
+  document.querySelectorAll('.act-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('act-'+id).classList.add('active');
+}
+
+/* ── ARRASTRA Y SUELTA ── */
+const dragData=[
+  {id:'lapiz',   name:'Lápiz técnico',    icon:'ti-pencil',      fid:'f0', funcion:'Realizar trazos finos y precisos sobre el papel de dibujo.'},
+  {id:'compas',  name:'Compás',           icon:'ti-circle',      fid:'f1', funcion:'Trazar circunferencias y arcos de medidas exactas.'},
+  {id:'reglaT',  name:'Regla T',          icon:'ti-ruler',       fid:'f2', funcion:'Trazar líneas horizontales perfectas y paralelas entre sí.'},
+  {id:'escuadra',name:'Escuadra',         icon:'ti-triangle',    fid:'f3', funcion:'Trazar líneas verticales y ángulos de 30°, 45° y 60°.'},
+  {id:'escalim', name:'Escalímetro',      icon:'ti-line-dashed', fid:'f4', funcion:'Medir y reducir distancias reales usando diferentes escalas.'},
+  {id:'borrador',name:'Borrador técnico', icon:'ti-eraser',      fid:'f5', funcion:'Eliminar trazos sin dañar la superficie del papel.'},
+];
+let dragAns={}, dragChecked=false;
+
+function buildDrag(){
+  dragAns={}; dragChecked=false;
+  document.getElementById('drag-fb').className='feedback';
+  const itemsEl=document.getElementById('drag-items');
+  const zonesEl=document.getElementById('drop-zones');
+  const shuffI=[...dragData].sort(()=>Math.random()-.5);
+  itemsEl.innerHTML='';
+  shuffI.forEach(d=>{
+    const el=document.createElement('div');
+    el.className='drag-item'; el.id='di-'+d.id; el.draggable=true;
+    el.innerHTML=`<i class="ti ${d.icon}"></i>${d.name}`;
+    el.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',d.id);el.classList.add('dragging');});
+    el.addEventListener('dragend',()=>el.classList.remove('dragging'));
+    itemsEl.appendChild(el);
+  });
+  const shuffZ=[...dragData].sort(()=>Math.random()-.5);
+  zonesEl.innerHTML='';
+  shuffZ.forEach(d=>{
+    const wrap=document.createElement('div'); wrap.className='drop-zone-wrap';
+    const lbl=document.createElement('div'); lbl.className='drop-label'; lbl.textContent=d.funcion;
+    const zone=document.createElement('div');
+    zone.className='drop-zone'; zone.id='dz-'+d.fid; zone.dataset.expects=d.id;
+    zone.textContent='Suelta aquí…';
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('over');});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('over'));
+    zone.addEventListener('drop',e=>{
+      e.preventDefault(); zone.classList.remove('over');
+      if(dragChecked)return;
+      const iid=e.dataTransfer.getData('text/plain');
+      const idata=dragData.find(x=>x.id===iid); if(!idata)return;
+      if(dragAns[zone.id]){const prev=dragAns[zone.id];const pe=document.getElementById('di-'+prev);if(pe)pe.style.display='flex';}
+      Object.keys(dragAns).forEach(zid=>{if(dragAns[zid]===iid&&zid!==zone.id){delete dragAns[zid];const oz=document.getElementById(zid);if(oz){oz.innerHTML='Suelta aquí…';oz.classList.remove('filled');}}});
+      dragAns[zone.id]=iid;
+      zone.innerHTML=`<i class="ti ${idata.icon}" style="color:var(--blue);flex-shrink:0;"></i><span style="font-size:13px;font-weight:500;color:var(--blue-dark);">${idata.name}</span>`;
+      zone.classList.add('filled');
+      document.getElementById('di-'+iid).style.display='none';
+    });
+    wrap.appendChild(lbl); wrap.appendChild(zone); zonesEl.appendChild(wrap);
+  });
+}
+
+function checkDrag(){
+  if(Object.keys(dragAns).length<dragData.length){
+    const fb=document.getElementById('drag-fb');
+    fb.className='feedback show partial';
+    fb.textContent='⚠ Faltan instrumentos por colocar. Arrastra todos antes de verificar.'; return;
+  }
+  dragChecked=true; let correct=0;
+  Object.entries(dragAns).forEach(([zid,iid])=>{
+    const zone=document.getElementById(zid);
+    if(iid===zone.dataset.expects){correct++;zone.classList.add('correct-zone');}
+    else{zone.classList.add('wrong-zone');}
+  });
+  const fb=document.getElementById('drag-fb');
+  if(correct===dragData.length){fb.className='feedback show ok';fb.textContent='✓ ¡Excelente! Emparejaste correctamente los 6 instrumentos con su función.';}
+  else{fb.className='feedback show partial';fb.textContent=`Obtuviste ${correct} de ${dragData.length} correctos. Las zonas rojas indican los errores. ¡Inténtalo de nuevo!`;}
+}
+
+/* ── IDENTIFICACION VISUAL ── */
+const identData=[
+  {label:'¿Qué instrumento es este?', ans:0, opts:['Compás','Regla T','Escalímetro','Escuadra'],
+   svg:`<svg width="70" height="70" viewBox="0 0 80 80"><line x1="40" y1="10" x2="22" y2="68" stroke="#185FA5" stroke-width="2.5" stroke-linecap="round"/><line x1="40" y1="10" x2="58" y2="68" stroke="#185FA5" stroke-width="2.5" stroke-linecap="round"/><circle cx="40" cy="10" r="5" fill="#185FA5"/><line x1="28" y1="40" x2="52" y2="40" stroke="#B5D4F4" stroke-width="1.5" stroke-linecap="round"/><circle cx="22" cy="68" r="3.5" fill="#0C447C"/><circle cx="58" cy="68" r="2.5" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/></svg>`},
+  {label:'¿Qué tipo de línea es esta?', ans:1, opts:['Línea continua gruesa','Línea discontinua','Línea de trazo y punto','Línea continua fina'],
+   svg:`<svg width="140" height="30" viewBox="0 0 140 30"><line x1="8" y1="15" x2="132" y2="15" stroke="#888780" stroke-width="2.5" stroke-dasharray="8,5" stroke-linecap="round"/></svg>`},
+  {label:'¿Qué instrumento es este?', ans:2, opts:['Compás','Borrador','Escalímetro','Lápiz técnico'],
+   svg:`<svg width="70" height="70" viewBox="0 0 80 80"><rect x="10" y="30" width="60" height="20" rx="3" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/><rect x="10" y="30" width="60" height="7" rx="3" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/><line x1="22" y1="37" x2="22" y2="50" stroke="#185FA5" stroke-width="0.8"/><line x1="34" y1="37" x2="34" y2="50" stroke="#185FA5" stroke-width="0.8"/><line x1="46" y1="37" x2="46" y2="50" stroke="#185FA5" stroke-width="1.2"/><text x="14" y="58" font-size="6" fill="#5F5E5A" font-family="sans-serif">1:10</text><text x="38" y="58" font-size="6" fill="#5F5E5A" font-family="sans-serif">1:20</text></svg>`},
+  {label:'¿Qué tipo de línea es esta?', ans:3, opts:['Línea discontinua','Línea de trazo y punto','Línea continua gruesa','Línea continua fina'],
+   svg:`<svg width="140" height="30" viewBox="0 0 140 30"><line x1="8" y1="15" x2="132" y2="15" stroke="#378ADD" stroke-width="1" stroke-linecap="round"/></svg>`},
+  {label:'¿Qué instrumento es este?', ans:1, opts:['Compás','Escuadra 45°','Lápiz técnico','Borrador'],
+   svg:`<svg width="70" height="70" viewBox="0 0 80 80"><polygon points="14,68 66,68 14,16" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.8" stroke-linejoin="round"/><text x="18" y="64" font-size="9" fill="#185FA5" font-family="sans-serif" font-weight="500">90°</text><text x="36" y="50" font-size="8" fill="#0C447C" font-family="sans-serif">45°</text></svg>`},
+  {label:'¿Qué tipo de línea es esta?', ans:0, opts:['Línea de trazo y punto','Línea continua gruesa','Línea discontinua','Línea continua fina'],
+   svg:`<svg width="140" height="30" viewBox="0 0 140 30"><line x1="8" y1="15" x2="132" y2="15" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="14,4,3,4" stroke-linecap="round"/></svg>`},
+];
+let identDone=[];
+
+function buildIdent(){
+  identDone=new Array(identData.length).fill(false);
+  const grid=document.getElementById('ident-grid'); grid.innerHTML='';
+  identData.forEach((item,i)=>{
+    const card=document.createElement('div'); card.className='ident-card'; card.id='ic-'+i;
+    const sh=[...item.opts.entries()].sort(()=>Math.random()-.5);
+    let optsH='';
+    sh.forEach(([oi,opt])=>{optsH+=`<button class="ident-opt" id="io-${i}-${oi}" onclick="answerI(${i},${oi},${item.ans})">${opt}</button>`;});
+    card.innerHTML=`<div class="ident-svg">${item.svg}</div><div class="ident-q">${item.label}</div><div class="ident-opts">${optsH}</div>`;
+    grid.appendChild(card);
+  });
+}
+function answerI(qi,sel,ans){
+  if(identDone[qi])return; identDone[qi]=true;
+  document.querySelectorAll(`#ic-${qi} .ident-opt`).forEach(o=>o.disabled=true);
+  document.getElementById(`io-${qi}-${sel}`).classList.add(sel===ans?'correct':'wrong');
+  if(sel!==ans)document.getElementById(`io-${qi}-${ans}`).classList.add('correct');
+}
+
+/* ── CRUCIGRAMA ── */
+/*
+  Grilla 10x10
+  HORIZONTAL:
+  1. COMPAS    fila0 col0  (6)
+  3. ESCALA    fila2 col2  (6)
+  5. FORMATO   fila4 col1  (7)
+  7. LINEA     fila6 col3  (5)
+  9. PLANO     fila8 col0  (5)
+  VERTICAL:
+  2. COTA      fila0 col5  (4)
+  4. ESCUADRA  fila0 col8  (8)
+  6. LAPIZ     fila2 col7  (5)
+  8. NORMA     fila4 col4  (5)
+*/
+const CWR=10,CWC=10;
+const cwWords=[
+  {word:'COMPAS',  dir:'H',row:0,col:0,num:1},
+  {word:'COTA',    dir:'V',row:0,col:5,num:2},
+  {word:'ESCALA',  dir:'H',row:2,col:2,num:3},
+  {word:'ESCUADRA',dir:'V',row:0,col:8,num:4},
+  {word:'FORMATO', dir:'H',row:4,col:1,num:5},
+  {word:'LAPIZ',   dir:'V',row:2,col:7,num:6},
+  {word:'LINEA',   dir:'H',row:6,col:3,num:7},
+  {word:'NORMA',   dir:'V',row:4,col:4,num:8},
+  {word:'PLANO',   dir:'H',row:8,col:0,num:9},
+];
+const cwCluesData={
+  H:[
+    {num:1,text:'Instrumento para trazar circunferencias y arcos.'},
+    {num:3,text:'Relación entre el tamaño del dibujo y el tamaño real del objeto.'},
+    {num:5,text:'Tamaño normalizado del papel (ejemplo: A4, A3).'},
+    {num:7,text:'Trazo que representa elementos en un plano técnico.'},
+    {num:9,text:'Representación gráfica de un objeto en 2D con normas técnicas.'},
+  ],
+  V:[
+    {num:2,text:'Línea que indica una medida o dimensión en el dibujo.'},
+    {num:4,text:'Instrumento triangular para trazar ángulos de 45° o 60°/30°.'},
+    {num:6,text:'Instrumento de grafito para trazar (tipo H o B).'},
+    {num:8,text:'Regla o estándar que regula cómo realizar un dibujo técnico.'},
+  ]
+};
+let cwSol=[];
+
+function buildCW(){
+  cwSol=Array.from({length:CWR},()=>Array(CWC).fill(null));
+  const numMap={};
+  cwWords.forEach(w=>{
+    for(let i=0;i<w.word.length;i++){
+      const r=w.dir==='H'?w.row:w.row+i;
+      const c=w.dir==='H'?w.col+i:w.col;
+      cwSol[r][c]=w.word[i];
+    }
+    const k=`${w.row}-${w.col}`;
+    if(!numMap[k])numMap[k]=[];
+    numMap[k].push(w.num);
+  });
+  const gridEl=document.getElementById('cw-grid');
+  gridEl.style.gridTemplateColumns=`repeat(${CWC},32px)`;
+  gridEl.innerHTML='';
+  for(let r=0;r<CWR;r++){
+    for(let c=0;c<CWC;c++){
+      const cell=document.createElement('div');
+      if(cwSol[r][c]===null){
+        cell.className='cw-cell black';
+      } else {
+        cell.className='cw-cell active';
+        const inp=document.createElement('input');
+        inp.maxLength=1; inp.id=`cw-${r}-${c}`;
+        inp.addEventListener('input',e=>{
+          e.target.value=e.target.value.toUpperCase().replace(/[^A-ZÁÉÍÓÚÑ]/g,'');
+        });
+        const k=`${r}-${c}`;
+        if(numMap[k]){
+          const ns=document.createElement('span'); ns.className='cw-num';
+          ns.textContent=numMap[k].join(','); cell.appendChild(ns);
+        }
+        cell.appendChild(inp);
+      }
+      gridEl.appendChild(cell);
+    }
+  }
+  const cluesEl=document.getElementById('cw-clues');
+  cluesEl.innerHTML=`
+    <div>
+      <div class="cw-clue-group-title"><i class="ti ti-arrow-right" style="margin-right:4px;"></i>Horizontales</div>
+      ${cwCluesData.H.map(c=>`<div class="cw-clue"><strong>${c.num}→</strong> ${c.text}</div>`).join('')}
+    </div>
+    <div>
+      <div class="cw-clue-group-title"><i class="ti ti-arrow-down" style="margin-right:4px;"></i>Verticales</div>
+      ${cwCluesData.V.map(c=>`<div class="cw-clue"><strong>${c.num}↓</strong> ${c.text}</div>`).join('')}
+    </div>`;
+  document.getElementById('cw-fb').className='feedback';
+}
+
+function checkCW(){
+  let correct=0,total=0;
+  for(let r=0;r<CWR;r++){
+    for(let c=0;c<CWC;c++){
+      if(cwSol[r][c]!==null){
+        total++;
+        const inp=document.getElementById(`cw-${r}-${c}`);
+        const cell=inp.parentElement;
+        cell.classList.remove('correct-cw','wrong-cw');
+        if(inp.value===cwSol[r][c]){correct++;cell.classList.add('correct-cw');}
+        else{cell.classList.add('wrong-cw');}
+      }
+    }
+  }
+  const fb=document.getElementById('cw-fb');
+  if(correct===total){fb.className='feedback show ok';fb.textContent=`✓ ¡Perfecto! Completaste el crucigrama con las ${total} letras correctas.`;}
+  else{fb.className='feedback show partial';fb.textContent=`Tienes ${correct} de ${total} letras correctas. Las casillas rojas indican los errores.`;}
+}
+</script>
+</body>
+</html>
