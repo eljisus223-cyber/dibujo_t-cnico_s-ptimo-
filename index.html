@@ -44,34 +44,60 @@
     gap: 0;
   }
 
-  /* Cabecera */
+  /* Cabecera con logo */
   .header {
     grid-column: 1 / 3;
-    background: var(--blue-dark);
+    background: linear-gradient(135deg, #042C53 0%, #0C447C 60%, #185FA5 100%);
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 0 1.5rem;
-    border-bottom: 3px solid var(--blue);
+    border-bottom: 2px solid rgba(55,138,221,0.5);
+    position: relative;
+    overflow: hidden;
   }
-  .hero-icon {
-    width: 40px; height: 40px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  .header::before {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    pointer-events: none;
   }
-  .hero-icon i { font-size: 20px; color: #fff; }
-  .hero-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: #fff; line-height: 1.1; }
-  .hero-sub { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: 60px; top: -20px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    pointer-events: none;
+  }
+  .logo-svg { flex-shrink: 0; }
+  .header-text { flex: 1; }
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; color: #fff; line-height: 1.1;
+    letter-spacing: 0.01em;
+  }
+  .hero-title span { color: #85B7EB; }
+  .hero-sub { font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 3px; letter-spacing: .06em; text-transform: uppercase; }
+  .header-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.1);
+    border: 0.5px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 11px; color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
 
-  /* Sidebar de navegación */
+  /* Sidebar */
   .sidebar {
     background: var(--bg2);
     border-right: 0.5px solid var(--border);
     padding: 1rem 0.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    display: flex; flex-direction: column; gap: 4px;
     overflow-y: auto;
   }
   .sidebar-label {
@@ -80,26 +106,125 @@
     padding: 0 8px; margin-bottom: 3px; margin-top: 8px;
   }
   .sidebar-label:first-child { margin-top: 0; }
+
+  /* Tabs con animaciones */
   .tab {
     display: flex; align-items: center; gap: 8px;
     padding: 8px 10px; border-radius: 8px;
     font-size: 12px; font-weight: 500;
     cursor: pointer; border: none;
     background: transparent; color: var(--text2);
-    transition: all .2s; text-align: left; width: 100%;
+    transition: background .2s, color .2s, transform .15s, box-shadow .2s;
+    text-align: left; width: 100%;
     font-family: 'DM Sans', sans-serif;
+    position: relative; overflow: hidden;
   }
-  .tab i { font-size: 14px; flex-shrink: 0; }
-  .tab:hover { background: var(--bg); color: var(--text); }
-  .tab.active { background: var(--blue); color: #fff; }
+  .tab::after {
+    content: '';
+    position: absolute; left: 0; top: 0;
+    width: 3px; height: 100%;
+    background: var(--blue);
+    border-radius: 0 3px 3px 0;
+    transform: scaleY(0);
+    transition: transform .2s;
+  }
+  .tab i { font-size: 14px; flex-shrink: 0; transition: transform .2s; }
+  .tab:hover {
+    background: var(--bg);
+    color: var(--text);
+    transform: translateX(3px);
+  }
+  .tab:hover i { transform: scale(1.15); }
+  .tab:hover::after { transform: scaleY(1); }
+  .tab.active {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(24,95,165,0.3);
+  }
+  .tab.active::after { transform: scaleY(0); }
+  .tab:active { transform: scale(0.97); }
 
-  /* Área de contenido */
+  /* Contenido */
   .content {
     padding: 1.25rem 1.5rem;
     overflow-y: auto;
     height: calc(100vh - 70px);
     background: var(--bg);
   }
+
+  /* Pantalla de bienvenida */
+  .welcome-screen {
+    position: fixed; inset: 0; z-index: 100;
+    background: linear-gradient(160deg, #042C53 0%, #0C447C 45%, #185FA5 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0;
+    animation: fadeInWelcome .6s ease;
+  }
+  @keyframes fadeInWelcome { from { opacity:0; } to { opacity:1; } }
+  .welcome-screen.hiding {
+    animation: fadeOutWelcome .5s ease forwards;
+  }
+  @keyframes fadeOutWelcome { from { opacity:1; transform:scale(1); } to { opacity:0; transform:scale(1.03); } }
+
+  .welcome-logo { margin-bottom: 2rem; animation: slideDown .7s ease; }
+  @keyframes slideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+
+  .welcome-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px; color: #fff;
+    text-align: center; line-height: 1.15;
+    margin-bottom: .5rem;
+    animation: slideDown .8s ease .1s both;
+  }
+  .welcome-title span { color: #85B7EB; }
+
+  .welcome-sub {
+    font-size: 13px; color: rgba(255,255,255,0.6);
+    letter-spacing: .1em; text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    animation: slideDown .8s ease .2s both;
+  }
+
+  .welcome-pills {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 2.5rem;
+    animation: slideDown .8s ease .3s both;
+  }
+  .welcome-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.1);
+    border: 0.5px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; color: rgba(255,255,255,0.85);
+  }
+
+  .welcome-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; color: #0C447C;
+    border: none; border-radius: 30px;
+    padding: 14px 36px; font-size: 15px; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: transform .2s, box-shadow .2s, background .2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    animation: slideDown .8s ease .4s both;
+  }
+  .welcome-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    background: #E6F1FB;
+  }
+  .welcome-btn:active { transform: scale(0.97); }
+  .welcome-btn i { font-size: 18px; transition: transform .2s; }
+  .welcome-btn:hover i { transform: translateX(4px); }
+
+  .welcome-deco {
+    position: absolute; pointer-events: none;
+  }
+  .deco1 { top: 8%; left: 6%; opacity: 0.06; }
+  .deco2 { bottom: 10%; right: 6%; opacity: 0.06; }
+  .deco3 { top: 40%; left: 2%; opacity: 0.04; }
+  @keyframes fadeInLayout { from { opacity:0; } to { opacity:1; } }
 
   /* Intro */
   .intro-block {
@@ -446,15 +571,71 @@
 </head>
 <body>
 
-<div class="layout">
+<!-- PANTALLA DE BIENVENIDA -->
+<div class="welcome-screen" id="welcome">
+  <!-- Decoraciones geométricas de fondo -->
+  <svg class="welcome-deco deco1" width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="10,210 10,10 170,210" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <polygon points="50,210 50,60 170,210" fill="none" stroke="#fff" stroke-width="1"/>
+    <line x1="10" y1="210" x2="210" y2="210" stroke="#fff" stroke-width="1.5"/>
+  </svg>
+  <svg class="welcome-deco deco2" width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#fff" stroke-width="1.2"/>
+    <circle cx="100" cy="100" r="60" fill="none" stroke="#fff" stroke-width="0.8"/>
+    <line x1="10" y1="100" x2="190" y2="100" stroke="#fff" stroke-width="0.8"/>
+    <line x1="100" y1="10" x2="100" y2="190" stroke="#fff" stroke-width="0.8"/>
+  </svg>
+  <svg class="welcome-deco deco3" width="120" height="300" viewBox="0 0 120 300" xmlns="http://www.w3.org/2000/svg">
+    <line x1="60" y1="0" x2="60" y2="300" stroke="#fff" stroke-width="1" stroke-dasharray="6,6"/>
+  </svg>
 
-  <!-- CABECERA -->
+  <!-- Logo central -->
+  <div class="welcome-logo">
+    <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="110" height="110" rx="24" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+      <line x1="18" y1="92" x2="92" y2="92" stroke="#85B7EB" stroke-width="2.5" stroke-linecap="round"/>
+      <polygon points="18,92 18,22 56,92" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="92,92 92,48 68,92" fill="none" stroke="#85B7EB" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="46" cy="38" r="5" fill="#85B7EB"/>
+      <line x1="46" y1="43" x2="30" y2="88" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="46" y1="43" x2="82" y2="88" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="56" y1="68" x2="80" y2="68" stroke="#85B7EB" stroke-width="1.2" stroke-dasharray="3,3"/>
+    </svg>
+  </div>
+
+  <div class="welcome-title">Dibujo <span>Técnico</span></div>
+  <div class="welcome-sub">Grado 7° · Tecnología e Informática</div>
+
+  <div class="welcome-pills">
+    <div class="welcome-pill"><i class="ti ti-pencil-ruler" style="font-size:13px;"></i> Precisión técnica</div>
+    <div class="welcome-pill"><i class="ti ti-book" style="font-size:13px;"></i> Aprendizaje</div>
+    <div class="welcome-pill"><i class="ti ti-cpu" style="font-size:13px;"></i> Innovación</div>
+  </div>
+
+  <button class="welcome-btn" onclick="enterApp()">
+    <i class="ti ti-arrow-right"></i> Comenzar el recurso
+  </button>
+</div>
+
+<div class="layout" id="main-layout" style="display:none;">
+
+  <!-- CABECERA CON LOGO -->
   <div class="header">
-    <div class="hero-icon"><i class="ti ti-pencil-ruler"></i></div>
-    <div>
-      <div class="hero-title">Dibujo Técnico</div>
-      <div class="hero-sub">Introducción general · Grado 7° · Tecnología e Informática · I.E. Colegio de Sugamuxi</div>
+    <svg class="logo-svg" width="44" height="44" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="110" height="110" rx="20" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <line x1="18" y1="92" x2="92" y2="92" stroke="#85B7EB" stroke-width="3" stroke-linecap="round"/>
+      <polygon points="18,92 18,22 56,92" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+      <polygon points="92,92 92,48 68,92" fill="none" stroke="#85B7EB" stroke-width="2.2" stroke-linejoin="round"/>
+      <circle cx="46" cy="38" r="5" fill="#85B7EB"/>
+      <line x1="46" y1="43" x2="30" y2="88" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <line x1="46" y1="43" x2="82" y2="88" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <line x1="56" y1="68" x2="80" y2="68" stroke="#85B7EB" stroke-width="1.2" stroke-dasharray="3,3"/>
+    </svg>
+    <div class="header-text">
+      <div class="hero-title">Dibujo <span>Técnico</span></div>
+      <div class="hero-sub">Introducción general · Grado 7° · Tecnología e Informática</div>
     </div>
+    <div class="header-badge"><i class="ti ti-school" style="font-size:13px;"></i> Recurso educativo</div>
   </div>
 
   <!-- SIDEBAR -->
@@ -651,6 +832,17 @@
 </div><!-- fin .layout -->
 
 <script>
+function enterApp(){
+  const w=document.getElementById('welcome');
+  w.classList.add('hiding');
+  setTimeout(()=>{
+    w.style.display='none';
+    const layout=document.getElementById('main-layout');
+    layout.style.display='grid';
+    layout.style.animation='fadeInLayout .4s ease';
+  },480);
+}
+
 const instrumentos = [
   {icon:'ti-pencil',name:'Lápiz técnico',desc:'Traza líneas finas y precisas. Se usan tipos H (duro) y HB (blando) según el trazo deseado. Siempre debe mantenerse bien afilado para lograr líneas uniformes.',special:'lapiz'},
   {icon:'ti-ruler',name:'Regla T',desc:'Permite trazar líneas horizontales perfectas. Se apoya en el borde del tablero para guiar el trazado y garantizar paralelismo entre líneas.'},
@@ -821,12 +1013,64 @@ function showTab(id){
   if(id==='cuidado')buildCuidado();
 }
 
+const svgInstrumentos = {
+  lapiz: `<svg viewBox="0 0 80 80" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <rect x="34" y="8" width="12" height="48" rx="3" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+    <polygon points="34,56 46,56 40,72" fill="#F5C96A" stroke="#BA7517" stroke-width="1.2"/>
+    <rect x="34" y="8" width="12" height="10" rx="3" fill="#B4B2A9" stroke="#5F5E5A" stroke-width="1"/>
+    <line x1="40" y1="68" x2="40" y2="72" stroke="#2C2C2A" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="40" y="38" text-anchor="middle" font-size="8" fill="#185FA5" font-family="sans-serif" font-weight="500">HB</text>
+  </svg>`,
+  reglaT: `<svg viewBox="0 0 80 80" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="18" width="64" height="12" rx="3" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+    <rect x="8" y="18" width="14" height="44" rx="3" fill="#B5D4F4" stroke="#185FA5" stroke-width="1.5"/>
+    <line x1="24" y1="24" x2="68" y2="24" stroke="#185FA5" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <line x1="24" y1="30" x2="68" y2="30" stroke="#185FA5" stroke-width="0.6" stroke-dasharray="3,3"/>
+  </svg>`,
+  escuadra: `<svg viewBox="0 0 80 80" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="14,66 66,66 14,14" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+    <polygon points="66,66 66,22 44,66" fill="#B5D4F4" stroke="#185FA5" stroke-width="1.5" opacity="0.7"/>
+    <text x="22" y="62" font-size="8" fill="#185FA5" font-family="sans-serif">90°</text>
+    <text x="50" y="62" font-size="7" fill="#0C447C" font-family="sans-serif">45°</text>
+  </svg>`,
+  compas: `<svg viewBox="0 0 80 80" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <line x1="40" y1="10" x2="22" y2="68" stroke="#185FA5" stroke-width="2" stroke-linecap="round"/>
+    <line x1="40" y1="10" x2="58" y2="68" stroke="#185FA5" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="40" cy="10" r="4" fill="#185FA5"/>
+    <line x1="28" y1="40" x2="52" y2="40" stroke="#B5D4F4" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="22" cy="68" r="3" fill="#0C447C"/>
+    <circle cx="58" cy="68" r="2" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.2"/>
+    <path d="M36,68 A18,18 0 0,0 44,68" fill="none" stroke="#185FA5" stroke-width="1" stroke-dasharray="2,2"/>
+  </svg>`,
+  escalimetro: `<svg viewBox="0 0 80 80" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="28" width="60" height="22" rx="3" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+    <rect x="10" y="28" width="60" height="7" rx="3" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+    <line x1="20" y1="35" x2="20" y2="50" stroke="#185FA5" stroke-width="0.8"/>
+    <line x1="30" y1="35" x2="30" y2="50" stroke="#185FA5" stroke-width="0.8"/>
+    <line x1="40" y1="35" x2="40" y2="50" stroke="#185FA5" stroke-width="1.2"/>
+    <line x1="50" y1="35" x2="50" y2="50" stroke="#185FA5" stroke-width="0.8"/>
+    <line x1="60" y1="35" x2="60" y2="50" stroke="#185FA5" stroke-width="0.8"/>
+    <text x="17" y="56" font-size="6" fill="#5F5E5A" font-family="sans-serif">1:10</text>
+    <text x="36" y="56" font-size="6" fill="#5F5E5A" font-family="sans-serif">1:20</text>
+    <text x="54" y="56" font-size="6" fill="#5F5E5A" font-family="sans-serif">1:50</text>
+  </svg>`,
+  borrador: `<svg viewBox="0 0 80 80" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <rect x="14" y="28" width="52" height="28" rx="6" fill="#F5F5F3" stroke="#B4B2A9" stroke-width="1.5"/>
+    <rect x="14" y="28" width="20" height="28" rx="6" fill="#F09595" stroke="#E24B4A" stroke-width="1"/>
+    <line x1="34" y1="28" x2="34" y2="56" stroke="#B4B2A9" stroke-width="1"/>
+    <line x1="20" y1="60" x2="60" y2="60" stroke="#B4B2A9" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+    <text x="48" y="46" text-anchor="middle" font-size="7" fill="#5F5E5A" font-family="sans-serif">BORRAR</text>
+  </svg>`
+};
+
 function buildInstrumentos(){
+  const svgMap = ['lapiz','reglaT','escuadra','compas','escalimetro','borrador'];
   const g=document.getElementById('inst-grid');
-  instrumentos.forEach(inst=>{
+  instrumentos.forEach((inst,i)=>{
     const c=document.createElement('div');
     c.className='card';
-    c.innerHTML=`<i class="ti ${inst.icon}"></i><div class="card-name">${inst.name}</div><div class="card-desc">${inst.desc.substring(0,50)}…</div>`;
+    const svgHtml = svgInstrumentos[svgMap[i]] || '';
+    c.innerHTML=`<div style="display:flex;justify-content:center;margin-bottom:8px;">${svgHtml}</div><div class="card-name">${inst.name}</div><div class="card-desc">${inst.desc.substring(0,50)}…</div>`;
     c.onclick=()=>{
       document.querySelectorAll('#inst-grid .card').forEach(x=>x.classList.remove('selected'));
       c.classList.add('selected');
@@ -837,7 +1081,12 @@ function buildInstrumentos(){
         document.getElementById('inst-detail').innerHTML=buildLapizPanel();
         initLapiz();
       } else {
-        document.getElementById('inst-detail').innerHTML=`<div class="detail-title"><i class="ti ${inst.icon}" style="margin-right:6px;color:var(--blue);"></i>${inst.name}</div><div class="detail-text">${inst.desc}</div>`;
+        document.getElementById('inst-detail').innerHTML=`
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.75rem;">
+            <div>${svgHtml}</div>
+            <div><div class="detail-title" style="margin-bottom:4px;">${inst.name}</div></div>
+          </div>
+          <div class="detail-text">${inst.desc}</div>`;
       }
     };
     g.appendChild(c);
