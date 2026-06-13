@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación · Dibujo Técnico · Grado 7°</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f3;
+    --bg3: #eeede9;
+    --text: #1a1a18;
+    --text2: #5f5e5a;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.22);
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --blue-dark: #0C447C;
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --red: #A32D2D;
+    --red-light: #FCEBEB;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  html, body {
+    width: 100%; min-height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg3);
+    color: var(--text);
+  }
+
+  /* PANTALLA DE BIENVENIDA */
+  .welcome {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #042C53 0%, #0C447C 50%, #185FA5 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .welcome.hiding { animation: fadeOut .5s ease forwards; }
+  @keyframes fadeOut { to { opacity:0; transform:scale(1.03); } }
+
+  .w-deco {
+    position: absolute; pointer-events: none; opacity: 0.06;
+  }
+
+  .w-logo { margin-bottom: 1.75rem; animation: slideDown .7s ease; }
+  @keyframes slideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+
+  .w-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px; color: #fff; line-height: 1.15;
+    margin-bottom: .5rem;
+    animation: slideDown .75s ease .1s both;
+  }
+  .w-title span { color: #85B7EB; }
+
+  .w-sub {
+    font-size: 12px; color: rgba(255,255,255,0.55);
+    letter-spacing: .1em; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: slideDown .75s ease .2s both;
+  }
+
+  .w-info {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 2rem;
+    animation: slideDown .75s ease .3s both;
+  }
+  .w-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.1);
+    border: 0.5px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; color: rgba(255,255,255,0.85);
+  }
+
+  /* Datos del estudiante */
+  .w-form {
+    background: rgba(255,255,255,0.08);
+    border: 0.5px solid rgba(255,255,255,0.15);
+    border-radius: 16px; padding: 1.5rem 2rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; max-width: 520px; width: 100%;
+    margin-bottom: 1.75rem;
+    animation: slideDown .75s ease .35s both;
+  }
+  .w-field { display: flex; flex-direction: column; gap: 5px; }
+  .w-field.full { grid-column: 1 / 3; }
+  .w-label { font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 500; letter-spacing: .04em; }
+  .w-input {
+    background: rgba(255,255,255,0.12);
+    border: 0.5px solid rgba(255,255,255,0.25);
+    border-radius: 8px; padding: 8px 12px;
+    font-size: 13px; color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color .2s;
+  }
+  .w-input::placeholder { color: rgba(255,255,255,0.35); }
+  .w-input:focus { border-color: rgba(255,255,255,0.5); }
+
+  .w-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; color: #0C447C;
+    border: none; border-radius: 30px;
+    padding: 13px 34px; font-size: 14px; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    animation: slideDown .75s ease .4s both;
+  }
+  .w-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
+  .w-btn:active { transform: scale(0.97); }
+  .w-btn i { font-size: 17px; transition: transform .2s; }
+  .w-btn:hover i { transform: translateX(4px); }
+  .w-error { font-size: 12px; color: #F09595; margin-top: .25rem; display: none; }
+
+  /* EVALUACIÓN */
+  .eval-wrap { display: none; max-width: 780px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+
+  /* Cabecera evaluación */
+  .eval-header {
+    background: linear-gradient(135deg, #042C53 0%, #0C447C 60%, #185FA5 100%);
+    border-radius: 16px; padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem; display: flex;
+    align-items: center; gap: 1.25rem;
+    position: relative; overflow: hidden;
+  }
+  .eval-header::after {
+    content: ''; position: absolute;
+    right: -30px; top: -30px;
+    width: 140px; height: 140px;
+    border-radius: 50%; background: rgba(255,255,255,0.05);
+    pointer-events: none;
+  }
+  .eval-logo { flex-shrink: 0; }
+  .eval-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: #fff; }
+  .eval-title span { color: #85B7EB; }
+  .eval-meta { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+  .eval-student {
+    margin-left: auto; text-align: right; flex-shrink: 0;
+    font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.7;
+  }
+  .eval-student strong { color: #fff; font-size: 13px; }
+
+  /* Barra de progreso */
+  .prog-bar-wrap {
+    background: var(--bg); border-radius: 12px;
+    padding: 1rem 1.25rem; margin-bottom: 1.25rem;
+    border: 0.5px solid var(--border);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .prog-label { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; }
+  .prog-bar { flex: 1; height: 8px; background: var(--bg2); border-radius: 4px; overflow: hidden; }
+  .prog-fill { height: 100%; background: var(--blue); border-radius: 4px; transition: width .4s; }
+  .prog-pct { font-size: 12px; color: var(--text2); white-space: nowrap; }
+
+  /* Secciones */
+  .sec-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 500; color: var(--blue-dark);
+    text-transform: uppercase; letter-spacing: .08em;
+    margin: 1.5rem 0 .75rem;
+    padding-bottom: .5rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .sec-label i { font-size: 14px; }
+
+  /* Tarjeta de pregunta */
+  .q-card {
+    background: var(--bg); border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.1rem 1.25rem;
+    margin-bottom: .75rem; transition: border-color .2s;
+  }
+  .q-card.answered { border-color: var(--blue); }
+  .q-card.correct-card { border-color: #639922; }
+  .q-card.wrong-card { border-color: #E24B4A; }
+
+  .q-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--blue-light); color: var(--blue-dark);
+    font-size: 11px; font-weight: 500; margin-bottom: 8px; flex-shrink: 0;
+  }
+  .q-text { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: .85rem; font-weight: 500; }
+  .q-opts { display: flex; flex-direction: column; gap: 6px; }
+
+  .q-opt {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    font-size: 13px; color: var(--text2);
+    cursor: pointer; transition: all .18s;
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif; text-align: left; width: 100%;
+  }
+  .q-opt:hover:not(:disabled) { border-color: var(--blue); color: var(--text); background: var(--blue-light); transform: translateX(2px); }
+  .q-opt:disabled { cursor: default; }
+  .q-opt.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark); }
+  .q-opt.correct { background: var(--green-light); border-color: #639922; color: var(--green); }
+  .q-opt.wrong { background: var(--red-light); border-color: #E24B4A; color: var(--red); }
+  .opt-letter {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--bg2); color: var(--text2);
+    font-size: 11px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: all .18s;
+  }
+  .q-opt.selected .opt-letter { background: var(--blue); color: #fff; }
+  .q-opt.correct .opt-letter { background: #639922; color: #fff; }
+  .q-opt.wrong .opt-letter { background: #E24B4A; color: #fff; }
+
+  /* Botón enviar */
+  .submit-wrap { margin-top: 2rem; text-align: center; }
+  .submit-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--blue); color: #fff;
+    border: none; border-radius: 30px;
+    padding: 13px 36px; font-size: 14px; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: transform .2s, box-shadow .2s, background .2s;
+    box-shadow: 0 4px 16px rgba(24,95,165,0.3);
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(24,95,165,0.4); background: var(--blue-dark); }
+  .submit-btn:active { transform: scale(0.97); }
+  .submit-btn:disabled { background: #B4B2A9; box-shadow: none; cursor: not-allowed; transform: none; }
+  .submit-note { font-size: 12px; color: var(--text2); margin-top: .6rem; }
+
+  /* Resultados */
+  .result-wrap {
+    display: none; max-width: 780px; margin: 0 auto; padding: 2rem 1rem 3rem;
+  }
+  .result-card {
+    background: var(--bg); border-radius: 16px;
+    border: 0.5px solid var(--border);
+    overflow: hidden; margin-bottom: 1.25rem;
+  }
+  .result-header {
+    background: linear-gradient(135deg, #042C53 0%, #0C447C 60%, #185FA5 100%);
+    padding: 2rem; text-align: center;
+  }
+  .result-score {
+    font-family: 'DM Serif Display', serif;
+    font-size: 56px; color: #fff; line-height: 1;
+    margin-bottom: .25rem;
+  }
+  .result-score span { font-size: 28px; color: #85B7EB; }
+  .result-pct { font-size: 18px; color: rgba(255,255,255,0.75); margin-bottom: .5rem; }
+  .result-msg { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .result-body { padding: 1.5rem; }
+  .result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 1.25rem; }
+  .result-stat {
+    background: var(--bg2); border-radius: var(--radius-md);
+    padding: 1rem; text-align: center;
+  }
+  .result-stat-n { font-size: 26px; font-weight: 500; color: var(--blue); }
+  .result-stat-n.green { color: var(--green); }
+  .result-stat-n.red { color: var(--red); }
+  .result-stat-l { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+  /* Revisión */
+  .review-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: var(--text);
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;
+  }
+  .review-item {
+    border-radius: var(--radius-md);
+    padding: .75rem 1rem; margin-bottom: .5rem;
+    font-size: 13px; display: flex; gap: 10px; align-items: flex-start;
+  }
+  .review-item.ok { background: var(--green-light); color: var(--green); }
+  .review-item.fail { background: var(--red-light); color: var(--red); }
+  .review-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .review-text { line-height: 1.6; }
+  .review-text strong { display: block; margin-bottom: 2px; }
+
+  .retry-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue); color: #fff;
+    border: none; border-radius: 30px;
+    padding: 11px 28px; font-size: 13px; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: transform .2s, background .2s;
+    margin-top: 1rem;
+  }
+  .retry-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<!-- PANTALLA DE BIENVENIDA -->
+<div class="welcome" id="welcome">
+  <svg class="w-deco" style="top:5%;left:4%;" width="200" height="200" viewBox="0 0 200 200">
+    <polygon points="10,190 10,10 160,190" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <line x1="10" y1="190" x2="190" y2="190" stroke="#fff" stroke-width="1.5"/>
+  </svg>
+  <svg class="w-deco" style="bottom:8%;right:5%;" width="180" height="180" viewBox="0 0 180 180">
+    <circle cx="90" cy="90" r="80" fill="none" stroke="#fff" stroke-width="1.2"/>
+    <circle cx="90" cy="90" r="50" fill="none" stroke="#fff" stroke-width="0.8"/>
+    <line x1="10" y1="90" x2="170" y2="90" stroke="#fff" stroke-width="0.8"/>
+    <line x1="90" y1="10" x2="90" y2="170" stroke="#fff" stroke-width="0.8"/>
+  </svg>
+
+  <div class="w-logo">
+    <svg width="96" height="96" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="110" height="110" rx="24" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+      <line x1="18" y1="92" x2="92" y2="92" stroke="#85B7EB" stroke-width="2.5" stroke-linecap="round"/>
+      <polygon points="18,92 18,22 56,92" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="92,92 92,48 68,92" fill="none" stroke="#85B7EB" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="46" cy="38" r="5" fill="#85B7EB"/>
+      <line x1="46" y1="43" x2="30" y2="88" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="46" y1="43" x2="82" y2="88" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="56" y1="68" x2="80" y2="68" stroke="#85B7EB" stroke-width="1.2" stroke-dasharray="3,3"/>
+    </svg>
+  </div>
+
+  <div class="w-title">Evaluación · Dibujo <span>Técnico</span></div>
+  <div class="w-sub">Grado 7° · Tecnología e Informática</div>
+
+  <div class="w-info">
+    <div class="w-pill"><i class="ti ti-list-numbers" style="font-size:13px;"></i> 20 preguntas</div>
+    <div class="w-pill"><i class="ti ti-sections" style="font-size:13px;"></i> 6 secciones</div>
+    <div class="w-pill"><i class="ti ti-check" style="font-size:13px;"></i> Selección múltiple</div>
+  </div>
+
+  <div class="w-form">
+    <div class="w-field full">
+      <div class="w-label">Nombre completo</div>
+      <input class="w-input" id="inp-nombre" placeholder="Escribe tu nombre completo" type="text">
+    </div>
+    <div class="w-field">
+      <div class="w-label">Curso</div>
+      <input class="w-input" id="inp-curso" placeholder="Ej: 7°A" type="text">
+    </div>
+    <div class="w-field">
+      <div class="w-label">Fecha</div>
+      <input class="w-input" id="inp-fecha" type="date">
+    </div>
+    <div class="w-field full">
+      <div class="w-label">Docente</div>
+      <input class="w-input" id="inp-docente" placeholder="Nombre del docente" type="text">
+    </div>
+    <div class="w-error full" id="form-error"><i class="ti ti-alert-circle"></i> Por favor completa todos los campos antes de continuar.</div>
+  </div>
+
+  <button class="w-btn" onclick="startEval()">
+    <i class="ti ti-arrow-right"></i> Iniciar evaluación
+  </button>
+</div>
+
+<!-- EVALUACIÓN -->
+<div class="eval-wrap" id="eval-wrap"></div>
+
+<!-- RESULTADOS -->
+<div class="result-wrap" id="result-wrap"></div>
+
+<script>
+const preguntas = [
+  {
+    sec: 'I. Normas básicas del dibujo técnico', secIcon: 'ti-list-check',
+    texto: 'El principal objetivo de las normas del dibujo técnico es:',
+    opts: ['Hacer dibujos más llamativos.','Permitir que cualquier persona interprete el dibujo de manera clara y precisa.','Decorar los planos con diferentes estilos.','Dibujar más rápido sin importar la exactitud.'],
+    ans: 1
+  },
+  {
+    sec: null,
+    texto: 'Una característica fundamental de un buen plano técnico es:',
+    opts: ['Tener muchos colores.','Presentar trazos libres y artísticos.','Ser claro, limpio y elaborado con precisión.','Incluir únicamente figuras geométricas.'],
+    ans: 2
+  },
+  {
+    sec: null,
+    texto: 'Antes de comenzar un dibujo técnico, lo más recomendable es:',
+    opts: ['Dibujar sin medir.','Organizar los instrumentos y revisar el formato de trabajo.','Utilizar marcadores de colores.','Hacer todos los trazos a mano alzada.'],
+    ans: 1
+  },
+  {
+    sec: 'II. Instrumentos del dibujo técnico', secIcon: 'ti-tool',
+    texto: '¿Qué instrumento se utiliza principalmente para trazar circunferencias y arcos?',
+    opts: ['Escuadra.','Transportador.','Compás.','Regla graduada.'],
+    ans: 2
+  },
+  {
+    sec: null,
+    texto: 'La función principal de la escuadra y el cartabón es:',
+    opts: ['Borrar líneas incorrectas.','Medir el grosor del papel.','Trazar líneas rectas y ángulos específicos.','Dibujar circunferencias.'],
+    ans: 2
+  },
+  {
+    sec: null,
+    texto: '¿Cuál es el instrumento más adecuado para medir ángulos?',
+    opts: ['Regla graduada.','Compás.','Transportador.','Plantilla de círculos.'],
+    ans: 2
+  },
+  {
+    sec: null,
+    texto: 'Si un estudiante necesita borrar una línea sin dañar el papel, debe utilizar:',
+    opts: ['Un borrador limpio y suave.','Una regla metálica.','El compás.','El cartabón.'],
+    ans: 0
+  },
+  {
+    sec: 'III. Formatos de papel', secIcon: 'ti-file',
+    texto: 'Los formatos A0, A1, A2, A3 y A4 pertenecen a:',
+    opts: ['Una clasificación de lápices.','Una norma para tamaños de papel.','Un sistema de tipos de líneas.','Un método para dibujar figuras.'],
+    ans: 1
+  },
+  {
+    sec: null,
+    texto: '¿Cuál de los siguientes formatos es el más pequeño?',
+    opts: ['A0.','A1.','A3.','A4.'],
+    ans: 3
+  },
+  {
+    sec: null,
+    texto: '¿Por qué es importante utilizar formatos normalizados en dibujo técnico?',
+    opts: ['Porque hacen que el dibujo sea más artístico.','Porque facilitan el almacenamiento, reproducción e interpretación de los planos.','Porque permiten usar cualquier medida.','Porque evitan el uso de reglas.'],
+    ans: 1
+  },
+  {
+    sec: 'IV. Limpieza y presentación de planos', secIcon: 'ti-shield-check',
+    texto: 'Una buena práctica al realizar un plano técnico es:',
+    opts: ['Apoyar constantemente la mano sobre el dibujo.','Mantener la hoja limpia y libre de manchas.','Repasar las líneas con muchos colores.','Doblar la hoja mientras se trabaja.'],
+    ans: 1
+  },
+  {
+    sec: null,
+    texto: '¿Qué acción ayuda a conservar limpio el trabajo?',
+    opts: ['Utilizar el borrador cuando sea necesario y retirar los residuos.','Comer sobre el plano.','Apoyar los instrumentos sobre el dibujo.','Dibujar con las manos sucias.'],
+    ans: 0
+  },
+  {
+    sec: null,
+    texto: 'Un plano con tachones, manchas y líneas poco definidas demuestra:',
+    opts: ['Buena presentación.','Creatividad artística.','Falta de cuidado y de aplicación de las normas de presentación.','Que el dibujo es más fácil de interpretar.'],
+    ans: 2
+  },
+  {
+    sec: 'V. Tipos de líneas', secIcon: 'ti-minus',
+    texto: 'La línea continua gruesa se utiliza generalmente para representar:',
+    opts: ['Ejes de simetría.','Contornos y aristas visibles.','Elementos ocultos.','Líneas de cota.'],
+    ans: 1
+  },
+  {
+    sec: null,
+    texto: 'La línea discontinua o segmentada representa:',
+    opts: ['Contornos visibles.','Ejes de rotación.','Partes o aristas ocultas del objeto.','Líneas de referencia.'],
+    ans: 2
+  },
+  {
+    sec: null,
+    texto: 'Las líneas de eje suelen representarse mediante:',
+    opts: ['Línea continua gruesa.','Línea continua fina.','Línea de trazo y punto.','Línea ondulada.'],
+    ans: 2
+  },
+  {
+    sec: null,
+    texto: 'Las líneas de cota tienen como función principal:',
+    opts: ['Decorar el plano.','Indicar las dimensiones o medidas de un objeto.','Representar partes ocultas.','Marcar el borde del papel.'],
+    ans: 1
+  },
+  {
+    sec: 'VI. Análisis y aplicación', secIcon: 'ti-brain',
+    texto: 'Un estudiante dibuja un objeto utilizando una línea gruesa para los contornos visibles y una línea segmentada para las partes ocultas. Esto significa que:',
+    opts: ['Aplicó correctamente las normas de líneas.','Utilizó líneas al azar.','Debió usar un solo tipo de línea.','El dibujo es incorrecto.'],
+    ans: 0
+  },
+  {
+    sec: null,
+    texto: 'Si durante la elaboración de un plano se pierde la precisión de las medidas, el resultado será:',
+    opts: ['Un dibujo artístico.','Un plano difícil de interpretar y posiblemente incorrecto.','Un formato más grande.','Una mejor presentación.'],
+    ans: 1
+  },
+  {
+    sec: null,
+    texto: '¿Cuál de las siguientes acciones demuestra un adecuado manejo del dibujo técnico?',
+    opts: ['Utilizar los instrumentos correctos, respetar las normas y mantener el trabajo limpio.','Dibujar rápidamente sin medir.','Emplear varios colores para cada línea.','Trabajar sin regla ni escuadra.'],
+    ans: 0
+  },
+];
+
+const letras = ['a','b','c','d'];
+let respuestas = new Array(20).fill(null);
+let estudiante = {};
+
+function startEval(){
+  const nombre = document.getElementById('inp-nombre').value.trim();
+  const curso  = document.getElementById('inp-curso').value.trim();
+  const fecha  = document.getElementById('inp-fecha').value.trim();
+  const docente= document.getElementById('inp-docente').value.trim();
+  const err = document.getElementById('form-error');
+  if(!nombre || !curso || !fecha || !docente){
+    err.style.display='flex'; err.style.gap='6px'; err.style.alignItems='center';
+    return;
+  }
+  err.style.display='none';
+  estudiante = { nombre, curso, fecha: formatDate(fecha), docente };
+  const w = document.getElementById('welcome');
+  w.classList.add('hiding');
+  setTimeout(()=>{
+    w.style.display='none';
+    buildEval();
+    document.getElementById('eval-wrap').style.display='block';
+  },480);
+}
+
+function formatDate(d){
+  if(!d) return '';
+  const [y,m,day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+
+function buildEval(){
+  const wrap = document.getElementById('eval-wrap');
+  let html = `
+  <div class="eval-header">
+    <svg class="eval-logo" width="48" height="48" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="110" height="110" rx="20" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <line x1="18" y1="92" x2="92" y2="92" stroke="#85B7EB" stroke-width="3" stroke-linecap="round"/>
+      <polygon points="18,92 18,22 56,92" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+      <polygon points="92,92 92,48 68,92" fill="none" stroke="#85B7EB" stroke-width="2.2" stroke-linejoin="round"/>
+      <circle cx="46" cy="38" r="5" fill="#85B7EB"/>
+      <line x1="46" y1="43" x2="30" y2="88" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <line x1="46" y1="43" x2="82" y2="88" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="eval-title">Evaluación · Dibujo <span>Técnico</span></div>
+      <div class="eval-meta">Grado 7° · Tecnología e Informática · Selección múltiple</div>
+    </div>
+    <div class="eval-student">
+      <strong>${estudiante.nombre}</strong><br>
+      Curso: ${estudiante.curso}<br>
+      Fecha: ${estudiante.fecha}<br>
+      Docente: ${estudiante.docente}
+    </div>
+  </div>
+
+  <div class="prog-bar-wrap">
+    <span class="prog-label"><i class="ti ti-pencil" style="margin-right:4px;color:var(--blue);"></i>Progreso</span>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <span class="prog-pct" id="prog-pct">0 / 20</span>
+  </div>`;
+
+  preguntas.forEach((p,i)=>{
+    if(p.sec){
+      html += `<div class="sec-label"><i class="ti ${p.secIcon}"></i>${p.sec}</div>`;
+    }
+    html += `<div class="q-card" id="qcard-${i}">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span class="q-num">${i+1}</span>
+      </div>
+      <div class="q-text">${p.texto}</div>
+      <div class="q-opts">`;
+    p.opts.forEach((o,j)=>{
+      html += `<button class="q-opt" id="opt-${i}-${j}" onclick="selectOpt(${i},${j})">
+        <span class="opt-letter">${letras[j]}</span>${o}
+      </button>`;
+    });
+    html += `</div></div>`;
+  });
+
+  html += `<div class="submit-wrap">
+    <button class="submit-btn" id="submit-btn" onclick="submitEval()" disabled>
+      <i class="ti ti-send"></i> Enviar evaluación
+    </button>
+    <div class="submit-note" id="submit-note">Responde todas las preguntas para enviar.</div>
+  </div>`;
+
+  wrap.innerHTML = html;
+}
+
+function selectOpt(qi, oi){
+  const prev = respuestas[qi];
+  if(prev !== null){
+    document.getElementById(`opt-${qi}-${prev}`).classList.remove('selected');
+  }
+  respuestas[qi] = oi;
+  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+  document.getElementById(`qcard-${qi}`).classList.add('answered');
+  updateProg();
+}
+
+function updateProg(){
+  const done = respuestas.filter(r=>r!==null).length;
+  const pct = Math.round((done/20)*100);
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-pct').textContent = done+' / 20';
+  const btn = document.getElementById('submit-btn');
+  const note = document.getElementById('submit-note');
+  if(done===20){
+    btn.disabled=false;
+    note.textContent='¡Listo! Ya puedes enviar tu evaluación.';
+    note.style.color='var(--blue)';
+  }
+}
+
+function submitEval(){
+  let correctas = 0;
+  preguntas.forEach((p,i)=>{
+    const userAns = respuestas[i];
+    const opts = document.querySelectorAll(`#qcard-${i} .q-opt`);
+    opts.forEach(o=>o.disabled=true);
+    if(userAns === p.ans){
+      correctas++;
+      document.getElementById(`opt-${i}-${userAns}`).classList.remove('selected');
+      document.getElementById(`opt-${i}-${userAns}`).classList.add('correct');
+      document.getElementById(`qcard-${i}`).classList.remove('answered');
+      document.getElementById(`qcard-${i}`).classList.add('correct-card');
+    } else {
+      document.getElementById(`opt-${i}-${userAns}`).classList.remove('selected');
+      document.getElementById(`opt-${i}-${userAns}`).classList.add('wrong');
+      document.getElementById(`opt-${i}-${p.ans}`).classList.add('correct');
+      document.getElementById(`qcard-${i}`).classList.remove('answered');
+      document.getElementById(`qcard-${i}`).classList.add('wrong-card');
+    }
+  });
+  setTimeout(()=>showResults(correctas), 600);
+}
+
+function showResults(correctas){
+  const incorrectas = 20 - correctas;
+  const pct = Math.round((correctas/20)*100);
+  let msg, color;
+  if(pct>=90){ msg='¡Excelente! Dominas muy bien los temas de dibujo técnico.'; color='#3B6D11'; }
+  else if(pct>=70){ msg='¡Buen trabajo! Tienes una buena base, repasa los temas con errores.'; color='#185FA5'; }
+  else if(pct>=50){ msg='Vas bien, pero necesitas reforzar algunos conceptos. ¡Sigue adelante!'; color='#BA7517'; }
+  else { msg='Necesitas repasar los temas del recurso educativo. ¡Tú puedes!'; color='#A32D2D'; }
+
+  let reviewHtml = '';
+  preguntas.forEach((p,i)=>{
+    const ok = respuestas[i]===p.ans;
+    reviewHtml += `<div class="review-item ${ok?'ok':'fail'}">
+      <i class="ti ${ok?'ti-circle-check':'ti-circle-x'} review-icon"></i>
+      <div class="review-text">
+        <strong>${i+1}. ${p.texto}</strong>
+        Tu respuesta: <strong>${letras[respuestas[i]]})</strong> ${p.opts[respuestas[i]]}
+        ${!ok?`<br>Respuesta correcta: <strong>${letras[p.ans]})</strong> ${p.opts[p.ans]}`:''}
+      </div>
+    </div>`;
+  });
+
+  const wrap = document.getElementById('result-wrap');
+  wrap.innerHTML = `
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-score">${correctas}<span>/ 20</span></div>
+      <div class="result-pct">${pct}% de aciertos</div>
+      <div class="result-msg" style="color:${color};font-weight:500;">${msg}</div>
+    </div>
+    <div class="result-body">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:.75rem;">
+        <strong style="color:var(--text);">${estudiante.nombre}</strong> · Curso ${estudiante.curso} · ${estudiante.fecha}
+      </div>
+      <div class="result-grid">
+        <div class="result-stat"><div class="result-stat-n">20</div><div class="result-stat-l">Preguntas</div></div>
+        <div class="result-stat"><div class="result-stat-n green">${correctas}</div><div class="result-stat-l">Correctas</div></div>
+        <div class="result-stat"><div class="result-stat-n red">${incorrectas}</div><div class="result-stat-l">Incorrectas</div></div>
+      </div>
+      <div class="review-title"><i class="ti ti-list-check" style="color:var(--blue);font-size:20px;"></i> Revisión de respuestas</div>
+      ${reviewHtml}
+      <button class="retry-btn" onclick="location.reload()"><i class="ti ti-refresh"></i> Volver a intentar</button>
+    </div>
+  </div>`;
+
+  document.getElementById('eval-wrap').style.display='none';
+  wrap.style.display='block';
+  wrap.scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
